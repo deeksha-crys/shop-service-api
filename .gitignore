@@ -26,6 +26,7 @@ jspm_packages/
 
 # Vercel deployment settings
 .vercel
+.next/
 
 *.idea/
 .env

@@ -18,6 +18,16 @@ function paymentProviderResolver(service) {
   };
 }
 
+function stripeResolver(service) {
+  return () => {
+    return {
+      enabled: service.enabled,
+      config: service.frontendConfig,
+      retrievePaymentMethod: (args) => stripeService.retrievePaymentMethod(args.id)
+    };
+  };
+}
+
 module.exports = {
   Query: {
     myCustomBusinessThing: () => ({
@@ -38,7 +48,7 @@ module.exports = {
     },
   },
   PaymentProvidersQueries: {
-    stripe: paymentProviderResolver(stripeService),
+    stripe: stripeResolver(stripeService),
     klarna: paymentProviderResolver(klarnaService),
     vipps: paymentProviderResolver(vippsService),
     mollie: paymentProviderResolver(mollieService),
@@ -66,6 +76,8 @@ module.exports = {
       stripeService.createPaymentIntent({ ...args, context }),
     confirmOrder: (parent, args, context) =>
       stripeService.confirmOrder({ ...args, context }),
+    createCustomerWithSetUpIntent: (parent, args) =>
+      stripeService.createCustomerWithSetUpIntent({ ...args }),
   },
   KlarnaMutations: {
     renderCheckout: (parent, args, context) =>

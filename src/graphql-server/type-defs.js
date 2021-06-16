@@ -93,7 +93,7 @@ module.exports = gql`
   }
 
   type PaymentProvidersQueries {
-    stripe: PaymentProvider!
+    stripe: StripePaymentProvider!
     klarna: PaymentProvider!
     vipps: PaymentProvider!
     mollie: PaymentProvider!
@@ -102,6 +102,12 @@ module.exports = gql`
   type PaymentProvider {
     enabled: Boolean!
     config: JSON
+  }
+  
+  type StripePaymentProvider {
+      enabled: Boolean!
+      config: JSON
+      retrievePaymentMethod(id: String!): JSON
   }
 
   type OrderQueries {
@@ -200,15 +206,33 @@ module.exports = gql`
   }
 
   type StripeMutations {
-    createPaymentIntent(
-      checkoutModel: CheckoutModelInput!
-      confirm: Boolean
-      paymentMethodId: String
-    ): JSON
-    confirmOrder(
-      checkoutModel: CheckoutModelInput!
-      paymentIntentId: String!
-    ): StripeConfirmOrderResponse!
+      createPaymentIntent(
+          checkoutModel: CheckoutModelInput!
+          confirm: Boolean
+          paymentMethodId: String
+      ): JSON
+      createCustomerWithSetUpIntent(
+          customer: StripeCustomerInput!
+      ): JSON
+      confirmOrder(
+          checkoutModel: CheckoutModelInput!
+          paymentIntentId: String!
+      ): StripeConfirmOrderResponse!
+  }
+
+  input StripeCustomerInput {
+      name: String!
+      email: String!
+      address: StripeAddressInput!
+      metadata: JSON
+  }
+
+  input StripeAddressInput {
+      city: String!,
+      line1: String!,
+      country: String!,
+      postal_code: String!,
+      state: String!,
   }
 
   type StripeConfirmOrderResponse {
