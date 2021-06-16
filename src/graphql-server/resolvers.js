@@ -81,6 +81,8 @@ module.exports = {
       stripeService.createCustomerWithSetUpIntent({ ...args }),
     detachPaymentMethod: (parent, args) =>
       stripeService.detachPaymentMethod(args.id),
+    attachPaymentMethod: (parent, args) =>
+      stripeService.attachPaymentMethod(args.id, args.customerId),
   },
   KlarnaMutations: {
     renderCheckout: (parent, args, context) =>

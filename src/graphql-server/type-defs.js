@@ -213,6 +213,7 @@ module.exports = gql`
     ): JSON
     createCustomerWithSetUpIntent(customer: StripeCustomerInput!): JSON
     detachPaymentMethod(id: String!): JSON
+    attachPaymentMethod(id: String!, customerId: String!): JSON
     confirmOrder(
       checkoutModel: CheckoutModelInput!
       paymentIntentId: String!

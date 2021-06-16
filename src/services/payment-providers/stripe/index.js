@@ -3,6 +3,7 @@ const createCustomerWithSetUpIntent = require("./create-setup-intent");
 const confirmOrder = require("./confirm-order");
 const retrievePaymentMethod = require("./retrieve-payment-method");
 const detachPaymentMethod = require("./detach-payment-method");
+const attachPaymentMethod = require("./attach-payment-method");
 
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 const STRIPE_PUBLISHABLE_KEY = process.env.STRIPE_PUBLISHABLE_KEY;
@@ -19,4 +20,5 @@ module.exports = {
   createCustomerWithSetUpIntent,
   retrievePaymentMethod,
   detachPaymentMethod,
+  attachPaymentMethod,
 };
