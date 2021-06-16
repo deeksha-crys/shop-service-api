@@ -60,6 +60,7 @@ module.exports = {
   Mutation: {
     user: () => ({}),
     paymentProviders: () => ({}),
+    customers: () => ({}),
   },
   UserMutations: {
     sendMagicLink: (parent, args, context) =>
@@ -71,6 +72,11 @@ module.exports = {
     klarna: () => ({}),
     mollie: () => ({}),
     vipps: () => ({}),
+  },
+  CrystallizeCustomerMutations: {
+    create: (parent, args) => {
+      return crystallize.customers.create({ ...args });
+    },
   },
   StripeMutations: {
     createPaymentIntent: (parent, args, context) =>

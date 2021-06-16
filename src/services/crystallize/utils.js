@@ -33,7 +33,6 @@ function createApiCaller(uri) {
     });
 
     const json = await response.json();
-
     if (json.errors) {
       console.log(JSON.stringify(json.errors, null, 2));
     }
