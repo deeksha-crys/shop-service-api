@@ -23,7 +23,8 @@ function stripeResolver(service) {
     return {
       enabled: service.enabled,
       config: service.frontendConfig,
-      retrievePaymentMethod: (args) => stripeService.retrievePaymentMethod(args.id)
+      retrievePaymentMethod: (args) =>
+        stripeService.retrievePaymentMethod(args.id),
     };
   };
 }
@@ -78,6 +79,8 @@ module.exports = {
       stripeService.confirmOrder({ ...args, context }),
     createCustomerWithSetUpIntent: (parent, args) =>
       stripeService.createCustomerWithSetUpIntent({ ...args }),
+    detachPaymentMethod: (parent, args) =>
+      stripeService.detachPaymentMethod(args.id),
   },
   KlarnaMutations: {
     renderCheckout: (parent, args, context) =>
