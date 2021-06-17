@@ -6,6 +6,7 @@ const CRYSTALLIZE_ACCESS_TOKEN_ID = process.env.CRYSTALLIZE_ACCESS_TOKEN_ID;
 const CRYSTALLIZE_ACCESS_TOKEN_SECRET =
   process.env.CRYSTALLIZE_ACCESS_TOKEN_SECRET;
 const CRYSTALLIZE_PIM_API_URL = process.env.CRYSTALLIZE_PIM_API_URL;
+const CRYSTALLIZE_CATALOGUE_API_URL = process.env.CRYSTALLIZE_CATALOGUE_API_URL;
 
 invariant(
   CRYSTALLIZE_TENANT_IDENTIFIER,
@@ -118,8 +119,12 @@ const getTenantId = (function () {
  * Catalogue API is the fast read-only API to lookup data
  * for a given item path or anything else in the catalogue
  */
+// const callCatalogueApi = createApiCaller(
+//   `https://api.crystallize.com/${CRYSTALLIZE_TENANT_IDENTIFIER}/catalogue`
+// );
+
 const callCatalogueApi = createApiCaller(
-  `https://api.crystallize.com/${CRYSTALLIZE_TENANT_IDENTIFIER}/catalogue`
+  `${CRYSTALLIZE_CATALOGUE_API_URL}/${CRYSTALLIZE_TENANT_IDENTIFIER}/catalogue`
 );
 
 /**

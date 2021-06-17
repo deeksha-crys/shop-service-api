@@ -138,10 +138,21 @@ module.exports = gql`
     user: UserMutations
     paymentProviders: PaymentProvidersMutations!
     customers: CrystallizeCustomerMutations!
+    subscriptions: SubscriptionMutations!
   }
 
   type CrystallizeCustomerMutations {
     create(customer: CrystallizeCustomerInput!): JSON
+  }
+
+  type SubscriptionMutations {
+    create(
+      item: JSON!
+      itemPath: String!
+      subscriptionPlan: JSON!
+      customerIdentifier: String!
+      priceVariantIdentifier: String
+    ): JSON
   }
 
   input BasketModelInput {
