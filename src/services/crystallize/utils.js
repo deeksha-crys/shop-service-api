@@ -5,6 +5,7 @@ const CRYSTALLIZE_TENANT_IDENTIFIER = process.env.CRYSTALLIZE_TENANT_IDENTIFIER;
 const CRYSTALLIZE_ACCESS_TOKEN_ID = process.env.CRYSTALLIZE_ACCESS_TOKEN_ID;
 const CRYSTALLIZE_ACCESS_TOKEN_SECRET =
   process.env.CRYSTALLIZE_ACCESS_TOKEN_SECRET;
+const CRYSTALLIZE_PIM_API_URL = process.env.CRYSTALLIZE_PIM_API_URL;
 
 invariant(
   CRYSTALLIZE_TENANT_IDENTIFIER,
@@ -141,7 +142,8 @@ const callOrdersApi = createApiCaller(
  * The PIM API is used for doing the ALL possible actions on
  * a tenant or your user profile
  */
-const callPimApi = createApiCaller("https://pim.crystallize.com/graphql");
+// const callPimApi = createApiCaller("https://pim.crystallize.com/graphql");
+const callPimApi = createApiCaller(CRYSTALLIZE_PIM_API_URL);
 
 module.exports = {
   normaliseOrderModel,

@@ -41,7 +41,7 @@ module.exports = async function createCustomer({ customer }) {
     },
     query: `
       mutation createCustomer(
-        $input: CrystallizeCustomerInput!
+        $input: CreateCustomerInput!
       ) {
         customer {
           create(
@@ -53,6 +53,5 @@ module.exports = async function createCustomer({ customer }) {
       }
     `,
   });
-  console.log("response -> ", response);
   return response.data.customer.create;
 };
