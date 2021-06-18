@@ -1,35 +1,32 @@
 import { callPimApi, callCatalogueApi, getTenantId } from "../utils";
 
 async function getProduct(path) {
-  console.log("path ", path);
   const r = await callCatalogueApi({
     query: `
       query GET_PRODUCT($path: String!) {
         catalogue(path: $path, language: "en") {
-          children {
-            ... on Product {
-              variants {
-                sku
-                subscriptionPlans {
-                  identifier
+          ... on Product {
+            variants {
+              sku
+              subscriptionPlans {
+                identifier
+                name
+                periods {
+                  id
                   name
-                  periods {
-                    id
-                    name
-                    initial {
-                      ...period
-                    }
-                    recurring {
-                      ...period
-                    }
+                  initial {
+                    ...period
+                  }
+                  recurring {
+                    ...period
                   }
                 }
               }
-            } 
+            }
           }
         }
       }
-      
+
       fragment period on ProductVariantSubscriptionPlanPricing {
         unit
         period
@@ -45,6 +42,7 @@ async function getProduct(path) {
       path,
     },
   });
+
   return r.data.catalogue;
 }
 
@@ -69,7 +67,6 @@ module.exports = async function createProductSubscription({
   try {
     const tenantId = await getTenantId();
     const product = await getProduct(itemPath);
-    console.log("product ", JSON.stringify(product));
     const planPeriod = product.variants
       .find((v) => v.sku === item.sku)
       ?.subscriptionPlans.find(
@@ -97,34 +94,9 @@ module.exports = async function createProductSubscription({
 
     // Define the current status of the subscription
     {
+      const date = new Date();
       const activeUntil = new Date();
-
-      switch (planPeriod.initial.unit) {
-        case "day": {
-          activeUntil.setDate(
-            activeUntil.getDate() + planPeriod.initial.period
-          );
-          break;
-        }
-        case "week": {
-          activeUntil.setDate(
-            activeUntil.getDate() + planPeriod.initial.period * 7
-          );
-          break;
-        }
-        case "month": {
-          activeUntil.setMonth(
-            activeUntil.getMonth() + planPeriod.initial.period
-          );
-          break;
-        }
-        case "year": {
-          activeUntil.setFullYear(
-            activeUntil.getFullYear() + planPeriod.initial.period
-          );
-          break;
-        }
-      }
+      activeUntil.setMonth(date.getMonth() + 1, 1);
 
       productSubscription.status = {
         price: initial.price,
@@ -153,13 +125,7 @@ module.exports = async function createProductSubscription({
       console.log(JSON.stringify(createSubscriptionResponse.errors, null, 2));
       throw new Error(createSubscriptionResponse.errors);
     }
-    console.log("createSubscriptionResponse -> ", createSubscriptionResponse);
     return createSubscriptionResponse;
-
-    // res.json({
-    //   status: "success",
-    //   createSubscriptionResponse,
-    // });
   } catch (error) {
     console.log("Error -> ", error.message);
   }
