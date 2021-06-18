@@ -92,7 +92,7 @@ module.exports = gql`
     meta: [KeyValuePair!]
   }
 
-  input CrystallizeCustomerInput {
+  input CreateCustomerInput {
     tenantId: ID!
     identifier: String
     email: String
@@ -142,7 +142,7 @@ module.exports = gql`
   }
 
   type CrystallizeCustomerMutations {
-    create(customer: CrystallizeCustomerInput!): JSON
+    create(customer: CreateCustomerInput!): JSON
   }
 
   type SubscriptionMutations {
