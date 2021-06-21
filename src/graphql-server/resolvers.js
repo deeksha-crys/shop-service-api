@@ -81,7 +81,7 @@ module.exports = {
   },
   SubscriptionMutations: {
     create: (parent, args) => {
-      return crystallize.subscriptions.create({ ...args });
+      return crystallize.subscriptions.create({ ...args.input });
     },
   },
   StripeMutations: {

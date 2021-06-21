@@ -146,13 +146,26 @@ module.exports = gql`
   }
 
   type SubscriptionMutations {
-    create(
-      item: JSON!
-      itemPath: String!
-      subscriptionPlan: JSON!
-      customerIdentifier: String!
-      priceVariantIdentifier: String
-    ): JSON
+    create(input: CreateProductSubscriptionInput!): JSON
+  }
+
+  input CreateProductSubscriptionInput {
+    item: ProductSubscriptionItem!
+    itemPath: String!
+    subscriptionPlan: ProductSubscription!
+    customerIdentifier: String!
+    priceVariantIdentifier: String!
+  }
+
+  input ProductSubscriptionItem {
+    name: String!
+    sku: String!
+    quantity: Int!
+  }
+
+  input ProductSubscription {
+    periodId: String!
+    identifier: String!
   }
 
   input BasketModelInput {
