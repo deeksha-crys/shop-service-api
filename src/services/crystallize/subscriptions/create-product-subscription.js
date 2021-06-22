@@ -64,6 +64,8 @@ module.exports = async function createProductSubscription({
   customerIdentifier,
   priceVariantIdentifier,
 }) {
+  console.log(item);
+  console.log(itemPath);
   try {
     const tenantId = await getTenantId();
     const product = await getProduct(itemPath);
@@ -124,6 +126,7 @@ module.exports = async function createProductSubscription({
       console.log(JSON.stringify(response.errors, null, 2));
       throw new Error(response.errors);
     }
+    console.log("response: ", response.data.productSubscription.create);
     return response.data.productSubscription.create;
   } catch (error) {
     console.log("Error -> ", error.message);

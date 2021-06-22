@@ -95,6 +95,12 @@ module.exports = {
       stripeService.detachPaymentMethod(args.id),
     attachPaymentMethod: (parent, args) =>
       stripeService.attachPaymentMethod(args.id, args.customerId),
+    generateInvoiceAndChargePayment: (parent, args) =>
+      stripeService.generateInvoiceAndChargePayment(
+        args.customerId,
+        args.taxRateId,
+        args.usage
+      ),
   },
   KlarnaMutations: {
     renderCheckout: (parent, args, context) =>

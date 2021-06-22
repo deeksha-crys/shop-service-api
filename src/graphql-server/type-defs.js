@@ -257,10 +257,28 @@ module.exports = gql`
     createCustomerWithSetUpIntent(customer: StripeCustomerInput!): JSON
     detachPaymentMethod(id: String!): JSON
     attachPaymentMethod(id: String!, customerId: String!): JSON
+    generateInvoiceAndChargePayment(
+      customerId: String!
+      taxRateId: String
+      usage: StripeInvoiceUsageInput!
+    ): JSON
     confirmOrder(
       checkoutModel: CheckoutModelInput!
       paymentIntentId: String!
     ): StripeConfirmOrderResponse!
+  }
+
+  input StripeInvoiceUsageInput {
+    orders: StripeInvoiceItemInput!
+    bandwidth: StripeInvoiceItemInput!
+    items: StripeInvoiceItemInput!
+    apiCalls: StripeInvoiceItemInput!
+    plan: StripeInvoiceItemInput!
+  }
+
+  input StripeInvoiceItemInput {
+    unit_amount: Int
+    quantity: Int
   }
 
   input StripeCustomerInput {
