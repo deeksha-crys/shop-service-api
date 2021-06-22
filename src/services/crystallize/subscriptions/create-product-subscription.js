@@ -64,11 +64,6 @@ module.exports = async function createProductSubscription({
   customerIdentifier,
   priceVariantIdentifier,
 }) {
-  console.log("item ", item);
-  console.log("itemPath ", itemPath);
-  console.log("subscriptionPlan ", subscriptionPlan);
-  console.log("customerIdentifier ", customerIdentifier);
-  console.log("priceVariantIdentifier ", priceVariantIdentifier);
   try {
     const tenantId = await getTenantId();
     const product = await getProduct(itemPath);
@@ -111,7 +106,7 @@ module.exports = async function createProductSubscription({
       };
     }
 
-    const createSubscriptionResponse = await callPimApi({
+    const response = await callPimApi({
       query: `
         mutation CREATE_PRODUCT_SUBSCRIPTION($productSubscription: CreateProductSubscriptionInput!) {
           productSubscription {
@@ -125,12 +120,11 @@ module.exports = async function createProductSubscription({
         productSubscription,
       },
     });
-    console.log("createSubscriptionResponse -> ", createSubscriptionResponse);
-    if (createSubscriptionResponse.errors) {
-      console.log(JSON.stringify(createSubscriptionResponse.errors, null, 2));
-      throw new Error(createSubscriptionResponse.errors);
+    if (response.errors) {
+      console.log(JSON.stringify(response.errors, null, 2));
+      throw new Error(response.errors);
     }
-    return createSubscriptionResponse;
+    return response.data.productSubscription.create;
   } catch (error) {
     console.log("Error -> ", error.message);
   }
