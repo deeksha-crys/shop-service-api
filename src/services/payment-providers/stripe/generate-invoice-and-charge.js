@@ -53,7 +53,8 @@ module.exports = async function generateInvoiceAndChargePayment(
     default_tax_rates: [taxRateId],
   });
   const finalizedInvoice = await getClient().invoices.finalizeInvoice(
-    invoice.id
+    invoice.id,
+    { auto_advance: true }
   );
   return await getClient().invoices.pay(finalizedInvoice.id, {
     payment_method: paymentMethodId,
