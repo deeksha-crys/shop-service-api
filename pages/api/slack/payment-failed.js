@@ -18,9 +18,10 @@ async function InvoicePaidAction(req, res) {
   console.log(customer_name);
   console.log(customer);
   console.log(subtotal);
+  res.send({ message: "Payment message posted on slack" });
   informPaymentFailedToCrystallize({ ...req.body }).then((response) => {
     if (response.status === 200)
-      res.send({ message: "Failed payment message posted on slack" });
+      res.send({ message: "Payment message posted on slack" });
     else res.send({ message: "Failed to send message" });
   });
 }

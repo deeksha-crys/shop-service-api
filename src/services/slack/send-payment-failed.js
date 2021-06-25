@@ -24,7 +24,7 @@ const constructSlackPayload = ({
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `:star: Stripe failed to collect monthly subscription payment for ${customer_name}.`,
+          text: `:warning: Stripe failed to collect monthly subscription payment for ${customer_name}.`,
         },
       },
       {

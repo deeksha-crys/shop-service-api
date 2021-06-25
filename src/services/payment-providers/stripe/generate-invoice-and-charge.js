@@ -8,7 +8,10 @@ module.exports = async function generateInvoiceAndChargePayment(
     customer: customerId,
     type: "card",
   });
+  const stripeCustomer = await getClient().customers.retrieve(customerId);
   const paymentMethodId = paymentMethods.data[0]["id"];
+  const customerTenantId = stripeCustomer?.metadata?.customerTenantId;
+
   await getClient().invoiceItems.create({
     customer: customerId,
     unit_amount: usage.orders.unit_amount,
@@ -51,13 +54,13 @@ module.exports = async function generateInvoiceAndChargePayment(
   const invoice = await getClient().invoices.create({
     customer: customerId,
     default_tax_rates: [taxRateId],
+    metadata: { customerTenantId: customerTenantId },
   });
   const finalizedInvoice = await getClient().invoices.finalizeInvoice(
     invoice.id,
-    { auto_advance: true, expand: ["customer"] }
+    { auto_advance: true }
   );
   return await getClient().invoices.pay(finalizedInvoice.id, {
     payment_method: paymentMethodId,
-    expand: ["customer"],
   });
 };
