@@ -64,8 +64,6 @@ module.exports = async function createProductSubscription({
   customerIdentifier,
   priceVariantIdentifier,
 }) {
-  console.log(item);
-  console.log(itemPath);
   try {
     const tenantId = await getTenantId();
     const product = await getProduct(itemPath);
