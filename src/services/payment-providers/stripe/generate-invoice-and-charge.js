@@ -54,9 +54,10 @@ module.exports = async function generateInvoiceAndChargePayment(
   });
   const finalizedInvoice = await getClient().invoices.finalizeInvoice(
     invoice.id,
-    { auto_advance: true }
+    { auto_advance: true, expand: ["customer"] }
   );
   return await getClient().invoices.pay(finalizedInvoice.id, {
     payment_method: paymentMethodId,
+    expand: ["customer"],
   });
 };
