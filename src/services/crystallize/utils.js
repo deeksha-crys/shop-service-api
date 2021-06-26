@@ -7,6 +7,7 @@ const CRYSTALLIZE_ACCESS_TOKEN_SECRET =
   process.env.CRYSTALLIZE_ACCESS_TOKEN_SECRET;
 const CRYSTALLIZE_PIM_API_URL = process.env.CRYSTALLIZE_PIM_API_URL;
 const CRYSTALLIZE_CATALOGUE_API_URL = process.env.CRYSTALLIZE_CATALOGUE_API_URL;
+const CRYSTALLIZE_ORDERS_API_URL = process.env.CRYSTALLIZE_ORDERS_API_URL;
 
 invariant(
   CRYSTALLIZE_TENANT_IDENTIFIER,
@@ -139,8 +140,11 @@ const callSearchApi = createApiCaller(
  * Orders API is the highly scalable API to send/read massive
  * amounts of orders
  */
+// const callOrdersApi = createApiCaller(
+//   `https://api.crystallize.com/${CRYSTALLIZE_TENANT_IDENTIFIER}/orders`
+// );
 const callOrdersApi = createApiCaller(
-  `https://api.crystallize.com/${CRYSTALLIZE_TENANT_IDENTIFIER}/orders`
+  `${CRYSTALLIZE_ORDERS_API_URL}/${CRYSTALLIZE_TENANT_IDENTIFIER}/orders`
 );
 
 /**
