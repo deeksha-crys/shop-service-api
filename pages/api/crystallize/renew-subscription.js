@@ -4,36 +4,34 @@ import setPipelineStage from "../../../src/services/crystallize/orders/set-pipel
 import getCustomer from "../../../src/services/crystallize/customers/get-customer";
 import generateInvoiceAndChargePayment from "../../../src/services/payment-providers/stripe/generate-invoice-and-charge";
 
-//After the subscription is renewed this API is called with a subscription object
-// Create Order
-// Generate and pay invoice
-//2. [DONE]create a new order and to pipeline
-//3. call generate invoice and pass the orderId from above, finalize it and pay or send-invoice
 const STRIPE_CUSTOMER_ID_KEY = "stripeCustomerId";
-const STRIPE_TAX_RATE_ID_KEY = "StripeTaxRateId";
+const STRIPE_ZERO_TAX_RATE_ID = process.env.STRIPE_ZERO_TAX_RATE_ID;
+const STRIPE_NORWAY_TAX_RATE_ID = process.env.STRIPE_NORWAY_TAX_RATE_ID;
 
-async function RenewSubscription(req, res) {
+async function AfterSubscriptionRenewal(req, res) {
   const { customerIdentifier, item, id } = req.body.productSubscription.get;
   const crystallizeCustomer = await getCustomer({
     identifier: customerIdentifier,
   });
-  // console.log("crystallizeCustomer", crystallizeCustomer);
   const {
     identifier,
     firstName,
     lastName,
     externalReferences,
-    meta,
+    addresses,
   } = crystallizeCustomer;
   const stripeCustomerId = externalReferences.filter(
     (ext) => ext.key === STRIPE_CUSTOMER_ID_KEY
   )[0].value;
-  // console.log("stripeCustomerId -> ", stripeCustomerId);
 
-  const defaultTaxRateId = meta.filter(
-    (ext) => ext.key === STRIPE_TAX_RATE_ID_KEY
-  )[0].value;
-  // console.log("defaultTaxRateId -> ", defaultTaxRateId);
+  const billingAddress = addresses.filter(
+    (addr) => addr?.type?.toLowerCase() === "billing" && addr?.country
+  )[0];
+
+  const defaultTaxRateId =
+    billingAddress && billingAddress.country.toLowerCase() === "norway"
+      ? STRIPE_NORWAY_TAX_RATE_ID
+      : STRIPE_ZERO_TAX_RATE_ID;
 
   const orderPayload = {
     customer: {
@@ -68,7 +66,7 @@ async function RenewSubscription(req, res) {
       },
     },
   };
-  // console.log("ORDER PAYLOAD -> ", orderPayload);
+
   const orderResponse = await createOrder(orderPayload);
   const orderId = orderResponse.id;
   const setPipelineStageResponse = await setPipelineStage({
@@ -76,7 +74,6 @@ async function RenewSubscription(req, res) {
     stageName: "new",
   });
 
-  console.log("New order created and added to pipeline");
   console.log("setPipelineStageResponse -> ", setPipelineStageResponse);
   const usage = {
     orders: { unit_amount: 50, quantity: 97 },
@@ -98,4 +95,4 @@ async function RenewSubscription(req, res) {
   });
 }
 
-export default cors(RenewSubscription);
+export default cors(AfterSubscriptionRenewal);
