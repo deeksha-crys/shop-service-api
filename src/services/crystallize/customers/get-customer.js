@@ -28,11 +28,14 @@ module.exports = async function getCustomer({ identifier, externalReference }) {
               key
               value
             }
+            externalReferences {
+              key
+              value
+            }
           }
         }
       }
     `,
   });
-
   return response.data.customer.get;
 };
