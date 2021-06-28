@@ -9,13 +9,14 @@ const pipelineStageNameToID = {
 };
 
 module.exports = async function setPipelineStage({ orderId, stageName }) {
-  console.log("orderId received -> ", orderId);
-  console.log("stageId received -> ", pipelineStageNameToID[stageName]);
+  const stageId = stageName
+    ? pipelineStageNameToID[stageName]
+    : pipelineStageNameToID["new"];
   const response = await callPimApi({
     variables: {
       orderId: orderId,
       pipelineId: CRYSTALLIZE_PIPELINE_ID,
-      stageId: pipelineStageNameToID[stageName],
+      stageId: stageId,
     },
     query: `
       mutation setPipelineStage(
@@ -32,6 +33,5 @@ module.exports = async function setPipelineStage({ orderId, stageName }) {
       }
     `,
   });
-  console.log("response from setPipelineStage", response);
   return response.data.order;
 };
