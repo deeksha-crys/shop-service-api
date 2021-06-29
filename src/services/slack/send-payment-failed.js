@@ -9,7 +9,6 @@ const informPaymentFailedToCrystallize = async (props) => {
   });
 };
 
-//TODO: Add tenantId also
 const constructSlackPayload = ({
   customer,
   customer_email,
