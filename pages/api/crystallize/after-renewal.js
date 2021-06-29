@@ -48,6 +48,7 @@ async function AfterSubscriptionRenewal(req, res) {
       : 0;
 
   //TODO: This will be derived from Subscriptions API
+  //TODO: PaymentMethod ID should not be hard coded
   const grossPrice = parseFloat(
     (NET_PRICE + (NET_PRICE * taxPercent) / 100).toFixed(2)
   );
