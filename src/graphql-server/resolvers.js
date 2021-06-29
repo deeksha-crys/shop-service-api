@@ -99,7 +99,8 @@ module.exports = {
       stripeService.generateInvoiceAndChargePayment(
         args.customerId,
         args.taxRateId,
-        args.usage
+        args.usage,
+        args.orderId
       ),
   },
   KlarnaMutations: {

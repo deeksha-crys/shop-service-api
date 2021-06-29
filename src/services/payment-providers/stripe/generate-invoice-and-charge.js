@@ -3,7 +3,8 @@ const STRIPE_ZERO_TAX_RATE_ID = process.env.STRIPE_ZERO_TAX_RATE_ID;
 module.exports = async function generateInvoiceAndChargePayment(
   customerId,
   taxRateId,
-  usage
+  usage,
+  orderId
 ) {
   const { getClient } = require("./utils");
   const paymentMethods = await getClient().paymentMethods.list({
@@ -55,7 +56,10 @@ module.exports = async function generateInvoiceAndChargePayment(
     const invoice = await getClient().invoices.create({
       customer: customerId,
       default_tax_rates: [taxRateId],
-      metadata: { customerTenantId: crystallizeTenantId },
+      metadata: {
+        customerTenantId: crystallizeTenantId,
+        crystallizeOrderId: orderId,
+      },
     });
     const finalizedInvoice = await getClient().invoices.finalizeInvoice(
       invoice.id,
@@ -68,7 +72,10 @@ module.exports = async function generateInvoiceAndChargePayment(
     const invoice = await getClient().invoices.create({
       customer: customerId,
       default_tax_rates: [taxRateId],
-      metadata: { customerTenantId: crystallizeTenantId },
+      metadata: {
+        customerTenantId: crystallizeTenantId,
+        crystallizeOrderId: orderId,
+      },
       collection_method: "send_invoice",
       days_until_due: 10,
     });

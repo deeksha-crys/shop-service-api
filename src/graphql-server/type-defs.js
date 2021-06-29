@@ -261,6 +261,7 @@ module.exports = gql`
       customerId: String!
       taxRateId: String
       usage: StripeInvoiceUsageInput!
+      orderId: String!
     ): JSON
     confirmOrder(
       checkoutModel: CheckoutModelInput!

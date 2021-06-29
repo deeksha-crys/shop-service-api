@@ -2,8 +2,8 @@ import cors from "../../../lib/cors";
 // import { informPaymentFailedToCrystallize } from "../../../src/services/slack/send-payment-failed";
 // import setPipelineStage from "../../../src/services/crystallize/orders/set-pipeline-stage";
 
-async function InvoicePaymentFailed(req, res) {
-  console.log("Invoice payment failed -> ", req.body);
+async function InvoicePaymentSuccess(req, res) {
+  console.log("Invoice payment success -> ", req.body);
   // const {
   //   customer,
   //   customer_email,
@@ -16,17 +16,12 @@ async function InvoicePaymentFailed(req, res) {
   // } = {
   //   ...req.body,
   // };
-  res.status(200).send({ message: "Invoice payment failed" });
   // const setPipelineStageResponse = await setPipelineStage({
   //   orderId: "orderId",
-  //   stageName: "fail",
+  //   stageName: "success",
   // });
 
-  // informPaymentFailedToCrystallize({ ...req.body }).then((response) => {
-  //   if (response.status === 200)
-  //     res.send({ message: "Payment message posted on slack" });
-  //   else res.send({ message: "Failed to send message" });
-  // });
+  res.status(200).send({ message: "Invoice is paid" });
 }
 
-export default cors(InvoicePaymentFailed);
+export default cors(InvoicePaymentSuccess);

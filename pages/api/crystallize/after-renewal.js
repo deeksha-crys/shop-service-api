@@ -48,7 +48,6 @@ async function AfterSubscriptionRenewal(req, res) {
       : 0;
 
   //TODO: This will be derived from Subscriptions API
-  //TODO: PaymentMethod ID should not be hard coded
   const grossPrice = parseFloat(
     (NET_PRICE + (NET_PRICE * taxPercent) / 100).toFixed(2)
   );
@@ -82,7 +81,7 @@ async function AfterSubscriptionRenewal(req, res) {
       provider: "stripe",
       stripe: {
         customerId: stripeCustomerId,
-        paymentMethodId: "pm_abcggjadg7jdhgd",
+        paymentMethodId: "pm_abcggjadg7jdhgd", //TODO: PaymentMethod ID should not be hard coded
       },
     },
   };
@@ -94,14 +93,14 @@ async function AfterSubscriptionRenewal(req, res) {
     stageName: "new",
   });
 
-  console.log("setPipelineStageResponse -> ", setPipelineStageResponse);
+  console.log("setPipelineStageResponse -> ", setPipelineStageResponse); //TODO: Remove this log after issue resolves or throw error
 
   const invoice = await generateInvoiceAndChargePayment(
     stripeCustomerId,
     defaultTaxRateId,
-    usage
+    usage,
+    orderId
   );
-  console.log("invoice -> ", invoice);
   res.send({
     message:
       "Invoice generated! Stripe will collect the payment and inform you of any failures",
