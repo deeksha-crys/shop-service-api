@@ -7,6 +7,15 @@ import generateInvoiceAndChargePayment from "../../../src/services/payment-provi
 const STRIPE_CUSTOMER_ID_KEY = "stripeCustomerId";
 const STRIPE_ZERO_TAX_RATE_ID = process.env.STRIPE_ZERO_TAX_RATE_ID;
 const STRIPE_NORWAY_TAX_RATE_ID = process.env.STRIPE_NORWAY_TAX_RATE_ID;
+const NET_PRICE = 64.1;
+
+const usage = {
+  orders: { unit_amount: 20, quantity: 97 },
+  bandwidth: { unit_amount: 15, quantity: 10 },
+  items: { unit_amount: 2, quantity: 100 },
+  apiCalls: { unit_amount: 0.001, quantity: 300000 },
+  plan: { unit_amount: 29900, quantity: 1 },
+};
 
 async function AfterSubscriptionRenewal(req, res) {
   const { customerIdentifier, item, id } = req.body.productSubscription.get;
@@ -33,6 +42,16 @@ async function AfterSubscriptionRenewal(req, res) {
       ? STRIPE_NORWAY_TAX_RATE_ID
       : STRIPE_ZERO_TAX_RATE_ID;
 
+  const taxPercent =
+    billingAddress && billingAddress.country.toLowerCase() === "norway"
+      ? 25
+      : 0;
+
+  //TODO: This will be derived from Subscriptions API
+  const grossPrice = parseFloat(
+    (NET_PRICE + (NET_PRICE * taxPercent) / 100).toFixed(2)
+  );
+
   const orderPayload = {
     customer: {
       identifier,
@@ -45,18 +64,18 @@ async function AfterSubscriptionRenewal(req, res) {
         name: item.name,
         sku: item.sku,
         price: {
-          gross: 100,
-          net: 80,
+          gross: grossPrice,
+          net: NET_PRICE,
           currency: "USD",
-          tax: { name: "VAT", percent: 25 },
+          tax: { name: "VAT", percent: taxPercent },
         },
       },
     ],
     total: {
-      tax: { name: "VAT", percent: 25 },
+      tax: { name: "VAT", percent: taxPercent },
       currency: "USD",
-      net: 100,
-      gross: 120,
+      net: NET_PRICE,
+      gross: grossPrice,
     },
     payment: {
       provider: "stripe",
@@ -75,13 +94,7 @@ async function AfterSubscriptionRenewal(req, res) {
   });
 
   console.log("setPipelineStageResponse -> ", setPipelineStageResponse);
-  const usage = {
-    orders: { unit_amount: 50, quantity: 97 },
-    bandwidth: { unit_amount: 5, quantity: 100 },
-    items: { unit_amount: 30, quantity: 2 },
-    apiCalls: { unit_amount: 200, quantity: 5 },
-    plan: { unit_amount: 1, quantity: 0 },
-  };
+
   const invoice = await generateInvoiceAndChargePayment(
     stripeCustomerId,
     defaultTaxRateId,

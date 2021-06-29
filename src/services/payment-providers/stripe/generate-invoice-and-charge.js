@@ -14,48 +14,47 @@ module.exports = async function generateInvoiceAndChargePayment(
   const paymentMethodId =
     paymentMethods?.data.length > 0 ? paymentMethods?.data[0]["id"] : null;
   const crystallizeTenantId = stripeCustomer?.metadata?.customerTenantId;
-  const taxRate = taxRateId ? taxRateId : STRIPE_ZERO_TAX_RATE_ID;
 
   await getClient().invoiceItems.create({
     customer: customerId,
-    unit_amount: usage.orders.unit_amount,
+    unit_amount_decimal: usage.orders.unit_amount,
     quantity: usage.orders.quantity,
-    description: "Extra Orders",
+    description: "Orders over plan limit of 1000",
     currency: "usd",
   });
   await getClient().invoiceItems.create({
     customer: customerId,
-    unit_amount: usage.items.unit_amount,
+    unit_amount_decimal: usage.items.unit_amount,
     quantity: usage.items.quantity,
-    description: "Extra Items",
+    description: "Catalogue items over plan limit of 100,000",
     currency: "usd",
   });
   await getClient().invoiceItems.create({
     customer: customerId,
-    unit_amount: usage.bandwidth.unit_amount,
+    unit_amount_decimal: usage.bandwidth.unit_amount,
     quantity: usage.bandwidth.quantity,
-    description: "Extra Bandwidth",
+    description: "Bandwidth over plan limit of 50GB",
     currency: "usd",
   });
   await getClient().invoiceItems.create({
     customer: customerId,
-    unit_amount: usage.apiCalls.unit_amount,
+    unit_amount_decimal: usage.apiCalls.unit_amount,
     quantity: usage.apiCalls.quantity,
-    description: "Extra Api Calls",
+    description: "Api Calls over plan limit of 500,000",
     currency: "usd",
   });
   await getClient().invoiceItems.create({
     customer: customerId,
-    unit_amount: 1,
-    quantity: 0,
-    description: "Flat fee",
+    unit_amount_decimal: usage.plan.unit_amount,
+    quantity: usage.plan.quantity,
+    description: "Atom plan base fee",
     currency: "usd",
   });
 
   if (paymentMethodId) {
     const invoice = await getClient().invoices.create({
       customer: customerId,
-      default_tax_rates: [taxRate],
+      default_tax_rates: [taxRateId],
       metadata: { customerTenantId: crystallizeTenantId },
     });
     const finalizedInvoice = await getClient().invoices.finalizeInvoice(
@@ -68,7 +67,7 @@ module.exports = async function generateInvoiceAndChargePayment(
   } else {
     const invoice = await getClient().invoices.create({
       customer: customerId,
-      default_tax_rates: [taxRate],
+      default_tax_rates: [taxRateId],
       metadata: { customerTenantId: crystallizeTenantId },
       collection_method: "send_invoice",
       days_until_due: 10,

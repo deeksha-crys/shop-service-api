@@ -277,7 +277,7 @@ module.exports = gql`
   }
 
   input StripeInvoiceItemInput {
-    unit_amount: Int
+    unit_amount: Float
     quantity: Int
   }
 
