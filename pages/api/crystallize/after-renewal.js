@@ -7,7 +7,7 @@ import generateInvoiceAndChargePayment from "../../../src/services/payment-provi
 const STRIPE_CUSTOMER_ID_KEY = "stripeCustomerId";
 const STRIPE_ZERO_TAX_RATE_ID = process.env.STRIPE_ZERO_TAX_RATE_ID;
 const STRIPE_NORWAY_TAX_RATE_ID = process.env.STRIPE_NORWAY_TAX_RATE_ID;
-const NET_PRICE = 64.1;
+const NET_PRICE = 324.9;
 
 const usage = {
   orders: { unit_amount: 20, quantity: 97 },
