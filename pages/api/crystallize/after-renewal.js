@@ -1,6 +1,5 @@
 import cors from "../../../lib/cors";
 import createOrder from "../../../src/services/crystallize/orders/create-order";
-import setPipelineStage from "../../../src/services/crystallize/orders/set-pipeline-stage";
 import getCustomer from "../../../src/services/crystallize/customers/get-customer";
 import generateInvoiceAndChargePayment from "../../../src/services/payment-providers/stripe/generate-invoice-and-charge";
 
@@ -85,16 +84,8 @@ async function AfterSubscriptionRenewal(req, res) {
       },
     },
   };
-
   const orderResponse = await createOrder(orderPayload);
   const orderId = orderResponse.id;
-  const setPipelineStageResponse = await setPipelineStage({
-    orderId: orderId,
-    stageName: "new",
-  });
-
-  console.log("setPipelineStageResponse -> ", setPipelineStageResponse); //TODO: Remove this log after issue resolves or throw error
-
   const invoice = await generateInvoiceAndChargePayment(
     stripeCustomerId,
     defaultTaxRateId,

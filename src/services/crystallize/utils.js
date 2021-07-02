@@ -80,6 +80,7 @@ function normaliseOrderModel({ customer, cart, total, ...rest }) {
     }),
     ...(customer && {
       customer: {
+        identifier: customer.identifier || null,
         firstName: customer.firstName || null,
         lastName: customer.lastName || null,
         addresses: customer.addresses || [
