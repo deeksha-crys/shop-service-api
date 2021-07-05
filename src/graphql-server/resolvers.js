@@ -56,6 +56,8 @@ module.exports = {
   },
   OrderQueries: {
     get: (parent, args) => crystallize.orders.get(args.id),
+    getAll: (parent, args) =>
+      crystallize.orders.getAll(args.customerIdentifier),
   },
   Mutation: {
     user: () => ({}),

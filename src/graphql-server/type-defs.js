@@ -126,6 +126,7 @@ module.exports = gql`
 
   type OrderQueries {
     get(id: String!): JSON
+    getAll(customerIdentifier: String!): JSON
   }
 
   type Voucher {
