@@ -4,8 +4,6 @@ const CRYSTALLIZE_NEW_ORDER_STAGE_ID =
   process.env.CRYSTALLIZE_NEW_ORDER_STAGE_ID;
 const CRYSTALLIZE_FAILED_ORDER_STAGE_ID =
   process.env.CRYSTALLIZE_FAILED_ORDER_STAGE_ID;
-const CRYSTALLIZE_SUCCESS_ORDER_STAGE_ID =
-  process.env.CRYSTALLIZE_SUCCESS_ORDER_STAGE_ID;
 
 module.exports = async function getAllOrdersForCustomer(customerIdentifier) {
   const tenantId = await getTenantId();
@@ -24,6 +22,7 @@ module.exports = async function getAllOrdersForCustomer(customerIdentifier) {
             edges {
               node {
                 createdAt
+                updatedAt
                 total {
                   gross
                   currency
