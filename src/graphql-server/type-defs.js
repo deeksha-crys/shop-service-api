@@ -106,6 +106,18 @@ module.exports = gql`
     externalReferences: [KeyValuePairInput!]
   }
 
+  input UpdateCustomerInput {
+    email: String
+    firstName: String!
+    middleName: String
+    lastName: String!
+    companyName: String
+    taxNumber: String
+    addresses: [AddressInput!]
+    meta: [KeyValuePairInput!]
+    externalReferences: [KeyValuePairInput!]
+  }
+
   type PaymentProvidersQueries {
     stripe: StripePaymentProvider!
     klarna: PaymentProvider!
@@ -144,6 +156,7 @@ module.exports = gql`
 
   type CrystallizeCustomerMutations {
     create(customer: CreateCustomerInput!): JSON
+    update(identifier: String!, customer: UpdateCustomerInput!): JSON
   }
 
   type SubscriptionMutations {

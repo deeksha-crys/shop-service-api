@@ -80,6 +80,9 @@ module.exports = {
     create: (parent, args) => {
       return crystallize.customers.create({ ...args });
     },
+    update: (parent, args) => {
+      return crystallize.customers.update({ ...args });
+    },
   },
   SubscriptionMutations: {
     create: (parent, args) => {
