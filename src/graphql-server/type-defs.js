@@ -93,7 +93,6 @@ module.exports = gql`
   }
 
   input CreateCustomerInput {
-    tenantId: ID!
     identifier: String
     email: String
     firstName: String!
