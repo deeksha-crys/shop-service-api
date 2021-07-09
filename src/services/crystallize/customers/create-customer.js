@@ -23,6 +23,7 @@ module.exports = async function createCustomer({ customer }) {
       }
     `,
   });
-
+  if (response?.errors)
+    throw new Error("Failed to create customer in Crystallize: ");
   return response.data.customer.create;
 };
