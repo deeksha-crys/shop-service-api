@@ -268,6 +268,7 @@ module.exports = gql`
       paymentMethodId: String
     ): JSON
     createCustomerWithSetUpIntent(customer: StripeCustomerInput!): JSON
+    createSetupIntent(customerId: String!): JSON
     detachPaymentMethod(id: String!): JSON
     attachPaymentMethod(id: String!, customerId: String!): JSON
     generateInvoiceAndChargePayment(

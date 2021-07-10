@@ -96,6 +96,8 @@ module.exports = {
       stripeService.confirmOrder({ ...args, context }),
     createCustomerWithSetUpIntent: (parent, args) =>
       stripeService.createCustomerWithSetUpIntent({ ...args }),
+    createSetupIntent: (parent, args) =>
+      stripeService.createSetupIntent(args.customerId),
     detachPaymentMethod: (parent, args) =>
       stripeService.detachPaymentMethod(args.id),
     attachPaymentMethod: (parent, args) =>

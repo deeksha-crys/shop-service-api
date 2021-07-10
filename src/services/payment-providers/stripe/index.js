@@ -1,10 +1,11 @@
 const createPaymentIntent = require("./create-payment-intent");
-const createCustomerWithSetUpIntent = require("./create-setup-intent");
+const createCustomerWithSetUpIntent = require("./create-customer-with-setup-intent");
 const confirmOrder = require("./confirm-order");
 const retrievePaymentMethod = require("./retrieve-payment-method");
 const detachPaymentMethod = require("./detach-payment-method");
 const attachPaymentMethod = require("./attach-payment-method");
 const generateInvoiceAndChargePayment = require("./generate-invoice-and-charge");
+const createSetupIntent = require("./create-set-up-intent");
 
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 const STRIPE_PUBLISHABLE_KEY = process.env.STRIPE_PUBLISHABLE_KEY;
@@ -23,4 +24,5 @@ module.exports = {
   detachPaymentMethod,
   attachPaymentMethod,
   generateInvoiceAndChargePayment,
+  createSetupIntent,
 };
