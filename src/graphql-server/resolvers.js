@@ -38,6 +38,7 @@ module.exports = {
     basket: (parent, args, context) => basketService.get({ ...args, context }),
     user: (parent, args, context) => userService.getUser({ context }),
     orders: () => ({}),
+    subscriptions: () => ({}),
     paymentProviders: () => ({}),
     voucher: (parent, args, context) =>
       voucherService.get({ ...args, context }),
@@ -58,6 +59,10 @@ module.exports = {
     get: (parent, args) => crystallize.orders.get(args.id),
     getAll: (parent, args) =>
       crystallize.orders.getAll(args.customerIdentifier),
+  },
+  SubscriptionQueries: {
+    getAll: (parent, args) =>
+      crystallize.subscriptions.getAllSubscriptions(args.customerIdentifier),
   },
   Mutation: {
     user: () => ({}),

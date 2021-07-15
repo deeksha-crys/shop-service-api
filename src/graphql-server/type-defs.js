@@ -9,6 +9,7 @@ module.exports = gql`
     user: User!
     paymentProviders: PaymentProvidersQueries!
     orders: OrderQueries!
+    subscriptions: SubscriptionQueries!
     voucher(code: String!): VoucherResponse!
   }
 
@@ -137,6 +138,10 @@ module.exports = gql`
 
   type OrderQueries {
     get(id: String!): JSON
+    getAll(customerIdentifier: String!): JSON
+  }
+
+  type SubscriptionQueries {
     getAll(customerIdentifier: String!): JSON
   }
 
