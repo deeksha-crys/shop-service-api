@@ -1,10 +1,10 @@
-import { callPimApi } from "../utils";
+import { callProductSubscriptionsApi } from "../utils";
 
 module.exports = async function cancelSubscription(productSubscriptionId) {
-  const response = await callPimApi({
+  const response = await callProductSubscriptionsApi({
     query: `
         mutation CANCEL_PRODUCT_SUBSCRIPTION($id: ID!) {
-          productSubscription {
+          productSubscriptions {
             cancel(id: $id, deactivate: true) {
               id
               status{
@@ -22,6 +22,6 @@ module.exports = async function cancelSubscription(productSubscriptionId) {
   if (response.errors) {
     throw new Error(response.errors);
   }
-  console.log(response);
-  return response.data.productSubscription.cancel;
+  console.log(JSON.stringify(response));
+  return response.data.productSubscriptions.cancel;
 };

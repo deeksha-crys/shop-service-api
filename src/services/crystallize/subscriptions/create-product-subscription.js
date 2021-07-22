@@ -1,4 +1,8 @@
-import { callPimApi, callCatalogueApi, getTenantId } from "../utils";
+import {
+  callProductSubscriptionsApi,
+  callCatalogueApi,
+  getTenantId,
+} from "../utils";
 
 async function getProduct(path) {
   const r = await callCatalogueApi({
@@ -106,10 +110,10 @@ module.exports = async function createProductSubscription({
       };
     }
 
-    const response = await callPimApi({
+    const response = await callProductSubscriptionsApi({
       query: `
         mutation CREATE_PRODUCT_SUBSCRIPTION($productSubscription: CreateProductSubscriptionInput!) {
-          productSubscription {
+          productSubscriptions {
             create(input: $productSubscription) {
               id
             }
@@ -124,8 +128,7 @@ module.exports = async function createProductSubscription({
       console.log(JSON.stringify(response.errors, null, 2));
       throw new Error(response.errors);
     }
-    console.log("response: ", response.data.productSubscription.create);
-    return response.data.productSubscription.create;
+    return response.data.productSubscriptions.create;
   } catch (error) {
     console.log("Error -> ", error.message);
   }

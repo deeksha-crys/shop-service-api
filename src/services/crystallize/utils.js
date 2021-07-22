@@ -8,6 +8,8 @@ const CRYSTALLIZE_ACCESS_TOKEN_SECRET =
 const CRYSTALLIZE_PIM_API_URL = process.env.CRYSTALLIZE_PIM_API_URL;
 const CRYSTALLIZE_CATALOGUE_API_URL = process.env.CRYSTALLIZE_CATALOGUE_API_URL;
 const CRYSTALLIZE_ORDERS_API_URL = process.env.CRYSTALLIZE_ORDERS_API_URL;
+const CRYSTALLIZE_SUBSCRIPTIONS_API_URL =
+  process.env.CRYSTALLIZE_SUBSCRIPTIONS_API_URL;
 
 invariant(
   CRYSTALLIZE_TENANT_IDENTIFIER,
@@ -148,6 +150,10 @@ const callOrdersApi = createApiCaller(
   `${CRYSTALLIZE_ORDERS_API_URL}/${CRYSTALLIZE_TENANT_IDENTIFIER}/orders`
 );
 
+const callProductSubscriptionsApi = createApiCaller(
+  `${CRYSTALLIZE_SUBSCRIPTIONS_API_URL}/${CRYSTALLIZE_TENANT_IDENTIFIER}/subscriptions`
+);
+
 /**
  * The PIM API is used for doing the ALL possible actions on
  * a tenant or your user profile
@@ -162,4 +168,5 @@ module.exports = {
   callOrdersApi,
   callPimApi,
   getTenantId,
+  callProductSubscriptionsApi,
 };
