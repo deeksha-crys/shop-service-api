@@ -10,7 +10,12 @@ module.exports = gql`
     paymentProviders: PaymentProvidersQueries!
     orders: OrderQueries!
     subscriptions: SubscriptionQueries!
+    customers: CustomerQueries!
     voucher(code: String!): VoucherResponse!
+  }
+
+  type CustomerQueries {
+    get(identifier: String!, externalReference: String): JSON
   }
 
   type VoucherResponse {
