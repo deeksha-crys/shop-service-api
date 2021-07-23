@@ -1,7 +1,7 @@
 const fetch = require("node-fetch");
 
 const SLACK_INCOMING_WEBHOOK_URL = process.env.SLACK_INCOMING_WEBHOOK_URL;
-const paymentMethodDeleted = async (props) => {
+const notifyPaymentMethodDelete = async (props) => {
   return fetch(SLACK_INCOMING_WEBHOOK_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -11,10 +11,9 @@ const paymentMethodDeleted = async (props) => {
 
 const constructSlackPayload = ({
   customer,
-  customer_email,
-  customer_name,
-  tenantId,
+  billing_details,
   paymentMethodId,
+  tenantId,
 }) => {
   return {
     text: `Payment method deleted.`,
@@ -23,7 +22,7 @@ const constructSlackPayload = ({
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `:warning: TenantId ${tenantId} deleted payment method in Crystallize`,
+          text: `💳 Payment method  deleted in Crystallize. The card is not attached to customer anymore.`,
         },
       },
       {
@@ -32,11 +31,7 @@ const constructSlackPayload = ({
         fields: [
           {
             type: "mrkdwn",
-            text: `*Customer Email*\n${customer_email}`,
-          },
-          {
-            type: "mrkdwn",
-            text: `*Customer name *\n${customer_name}`,
+            text: `*Cardholder name *\n${billing_details.name}`,
           },
           {
             type: "mrkdwn",
@@ -48,7 +43,7 @@ const constructSlackPayload = ({
           },
           {
             type: "mrkdwn",
-            text: `* Stripe PaymentMethodId *\n${paymentMethodId}`,
+            text: `*Payment Method ID for deleted card*\n${paymentMethodId}`,
           },
         ],
       },
@@ -56,4 +51,4 @@ const constructSlackPayload = ({
   };
 };
 
-module.exports = { paymentMethodDeleted };
+module.exports = { notifyPaymentMethodDelete };
