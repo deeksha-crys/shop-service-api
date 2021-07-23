@@ -13,7 +13,7 @@ const constructSlackPayload = ({
   customer,
   billing_details,
   paymentMethodId,
-  tenantId,
+  crystallizeCustomerIdentifier,
 }) => {
   return {
     text: `New payment method  added.`,
@@ -39,7 +39,7 @@ const constructSlackPayload = ({
           },
           {
             type: "mrkdwn",
-            text: `*Crystallize Tenant ID*\n${tenantId}`,
+            text: `*Crystallize Customer ID*\n${crystallizeCustomerIdentifier}`,
           },
           {
             type: "mrkdwn",

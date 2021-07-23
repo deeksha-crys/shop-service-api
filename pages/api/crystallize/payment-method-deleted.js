@@ -9,12 +9,13 @@ async function paymentMethodDeleted(req, res) {
     ...req.body.data.object,
   };
   const stripeCustomer = await getClient().customers.retrieve(customer);
-  const tenantId = stripeCustomer?.metadata?.customerTenantId;
+  const crystallizeCustomerIdentifier =
+    stripeCustomer?.metadata?.customerTenantId;
   const response = await notifyPaymentMethodDelete({
     customer,
     billing_details,
     paymentMethodId: id,
-    tenantId,
+    crystallizeCustomerIdentifier,
   });
   if (response.status === 200)
     res.send({
