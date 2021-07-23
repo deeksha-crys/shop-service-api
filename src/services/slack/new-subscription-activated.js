@@ -9,22 +9,19 @@ const newSubscriptionActivated = async (props) => {
   });
 };
 
-//TODO: Add tenantId also
 const constructSlackPayload = ({
-  firstName,
-  lastName,
-  email,
-  tenantId,
   planName,
+  productSubscriptionId,
+  customerIdentifier,
 }) => {
   return {
-    text: `${firstName} ${lastName} activated ${planName} subscription  `,
+    text: `New product subscription  `,
     blocks: [
       {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `:star: ${firstName} ${lastName} activated ${planName} subscription`,
+          text: `🥳 🥳 New ${planName} plan subscription activated.`,
         },
       },
       {
@@ -33,11 +30,15 @@ const constructSlackPayload = ({
         fields: [
           {
             type: "mrkdwn",
-            text: `*Email*\n${email}`,
+            text: `*Subscription plan*\n${planName}`,
           },
           {
             type: "mrkdwn",
-            text: `*TenantId*\n${tenantId}`,
+            text: `* Crystallize Customer ID*\n${customerIdentifier}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Crystallize Product Subscription ID*\n${productSubscriptionId}`,
           },
         ],
       },
