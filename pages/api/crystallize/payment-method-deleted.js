@@ -5,14 +5,15 @@ const {
 } = require("../../../src/services/payment-providers/stripe/utils");
 
 async function paymentMethodDeleted(req, res) {
-  const { customer, billing_details, id } = {
+  const { billing_details, id } = {
     ...req.body.data.object,
   };
-  const stripeCustomer = await getClient().customers.retrieve(customer);
+  const stripeCustomerId = req.body.data.previous_attributes.customer;
+  const stripeCustomer = await getClient().customers.retrieve(stripeCustomerId);
   const crystallizeCustomerIdentifier =
     stripeCustomer?.metadata?.customerTenantId;
   const response = await notifyPaymentMethodDelete({
-    customer,
+    customer: stripeCustomerId,
     billing_details,
     paymentMethodId: id,
     crystallizeCustomerIdentifier,
