@@ -1,5 +1,3 @@
-const STRIPE_ZERO_TAX_RATE_ID = process.env.STRIPE_ZERO_TAX_RATE_ID;
-
 module.exports = async function generateInvoiceAndChargePayment(
   customerId,
   taxRateId,

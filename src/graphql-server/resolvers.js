@@ -98,6 +98,7 @@ module.exports = {
       return crystallize.subscriptions.create({ ...args.input });
     },
     cancel: (parent, args) => crystallize.subscriptions.cancel(args.id),
+    renew: (parent, args) => crystallize.subscriptions.renew({ ...args }),
   },
   StripeMutations: {
     createPaymentIntent: (parent, args, context) =>

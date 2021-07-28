@@ -1,23 +1,27 @@
-import { callPimApi } from "../utils";
+import { callProductSubscriptionsApi } from "../utils";
 
-module.exports = async function renewSubscription({ subscriptionId }) {
-  const response = await callPimApi({
+module.exports = async function renewSubscription({ id }) {
+  const response = await callProductSubscriptionsApi({
     query: `
         mutation RENEW_PRODUCT_SUBSCRIPTION($id: ID!) {
-          productSubscription {
+          productSubscriptions {
             renew(id: $id) {
               id
+              status {
+                renewAt
+                activeUntil
+              }
             }
           }
         }
       `,
     variables: {
-      subscriptionId,
+      id,
     },
   });
   if (response.errors) {
     throw new Error(response.errors);
   }
-  console.log(response.data.productSubscription);
-  return response.data.productSubscription;
+  console.log(response.data.productSubscriptions);
+  return response.data.productSubscriptions;
 };

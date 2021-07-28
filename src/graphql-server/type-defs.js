@@ -171,6 +171,7 @@ module.exports = gql`
   type SubscriptionMutations {
     create(input: CreateProductSubscriptionInput!): JSON
     cancel(id: String!): JSON
+    renew(id: String!): JSON
   }
 
   input CreateProductSubscriptionInput {
