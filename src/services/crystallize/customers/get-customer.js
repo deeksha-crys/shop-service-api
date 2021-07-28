@@ -25,9 +25,14 @@ module.exports = async function getCustomer({ identifier, externalReference }) {
             middleName
             lastName
             email
+            companyName
+            taxNumber
             addresses {
               type
               country
+              state
+              city
+              postalCode
             }
             meta {
               key
