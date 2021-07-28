@@ -22,6 +22,5 @@ module.exports = async function renewSubscription({ id }) {
   if (response.errors) {
     throw new Error(response.errors);
   }
-  console.log(response.data.productSubscriptions);
-  return response.data.productSubscriptions;
+  return response.data.productSubscriptions.renew;
 };
