@@ -14,7 +14,7 @@ const STRIPE_ZERO_TAX_RATE_ID = process.env.STRIPE_ZERO_TAX_RATE_ID;
 const STRIPE_NORWAY_TAX_RATE_ID = process.env.STRIPE_NORWAY_TAX_RATE_ID;
 
 async function AfterSubscriptionRenewal(req, res) {
-  const { customerIdentifier, item, id } = req.body.productSubscription.get;
+  const { customerIdentifier, item } = req.body.productSubscription.get;
   const crystallizeCustomer = await getCustomer({
     identifier: customerIdentifier,
   });
@@ -49,20 +49,16 @@ async function AfterSubscriptionRenewal(req, res) {
       : 0;
 
   const metrics = await getMetrics(identifier);
-  console.log("metrics ", metrics);
   const planName = item.name.includes("particle")
     ? "particle"
     : item.name.includes("atom")
     ? "atom"
     : "crystal";
   const payableUsage = getPayableUsage(planName, metrics);
-  console.log("payableUsage ", payableUsage);
   const netPrice = parseFloat(getNetUsageCost(payableUsage).toFixed(2));
-  console.log("netPrice ", netPrice);
   const grossPrice = parseFloat(
     (netPrice + (netPrice * taxPercent) / 100).toFixed(2)
   );
-  console.log("gross price ", grossPrice);
 
   const orderPayload = {
     customer: {
