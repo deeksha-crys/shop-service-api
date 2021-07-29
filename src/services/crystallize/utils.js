@@ -161,13 +161,20 @@ const callProductSubscriptionsApi = createApiCaller(
 // const callPimApi = createApiCaller("https://pim.crystallize.com/graphql");
 const callPimApi = createApiCaller(CRYSTALLIZE_PIM_API_URL);
 
-const planUnitPricing = {
+const planPricing = {
   atom: {
-    orders: { unit_amount: 20 },
-    bandwidth: { unit_amount: 15 },
-    items: { unit_amount: 2 },
-    apiCalls: { unit_amount: 0.001 },
-    plan: { unit_amount: 29900 },
+    orders: { max_orders: 1000, per_extra_orders: 0.2 },
+    bandwidth: {
+      max_bandwidth: 50,
+      per_extra_bandwidth: 0.15,
+    },
+    items: { max_items: 1000000, per_extra_items: 0.02 },
+    apiCalls: {
+      max_api_calls: 500000,
+      per_extra_api_calls: 1,
+      api_calls_chunk_size: 100000,
+    },
+    basePrice: 29900,
   },
   particle: {
     orders: { max_orders: 50, per_extra_orders: 0.5 },
@@ -178,11 +185,12 @@ const planUnitPricing = {
       per_extra_api_calls: 2,
       api_calls_chunk_size: 25000,
     },
+    basePrice: 0,
   },
 };
 
 const getPayableUsage = (planName, metrics) => {
-  const planLimit = planUnitPricing[planName];
+  const planLimit = planPricing[planName];
   return {
     orders: {
       unit_amount: planLimit.orders.per_extra_orders * 100,
@@ -217,7 +225,7 @@ const getPayableUsage = (planName, metrics) => {
               metrics.bandwidth.total - planLimit.bandwidth.max_bandwidth
             ),
     },
-    plan: { unit_amount: planName === "particle" ? 0 : 299, quantity: 1 },
+    plan: { unit_amount: planLimit.basePrice, quantity: 1 },
   };
 };
 
@@ -231,7 +239,7 @@ const getNetUsageCost = (usage) => {
     apiCallsCost / 100 +
     bandwidthCost / 100 +
     ordersCost / 100 +
-    usage.plan.unit_amount
+    usage.plan.unit_amount / 100
   );
 };
 
