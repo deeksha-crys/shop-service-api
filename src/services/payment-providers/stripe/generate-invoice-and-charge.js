@@ -18,35 +18,35 @@ module.exports = async function generateInvoiceAndChargePayment(
     customer: customerId,
     unit_amount_decimal: usage.orders.unit_amount,
     quantity: usage.orders.quantity,
-    description: "Orders over plan limit of 1000",
+    description: "Orders over plan limit",
     currency: "usd",
   });
   await getClient().invoiceItems.create({
     customer: customerId,
     unit_amount_decimal: usage.items.unit_amount,
     quantity: usage.items.quantity,
-    description: "Catalogue items over plan limit of 100,000",
+    description: "Catalogue items over plan limit",
     currency: "usd",
   });
   await getClient().invoiceItems.create({
     customer: customerId,
     unit_amount_decimal: usage.bandwidth.unit_amount,
     quantity: usage.bandwidth.quantity,
-    description: "Bandwidth over plan limit of 50GB",
+    description: "Bandwidth over plan limit",
     currency: "usd",
   });
   await getClient().invoiceItems.create({
     customer: customerId,
     unit_amount_decimal: usage.apiCalls.unit_amount,
     quantity: usage.apiCalls.quantity,
-    description: "Api Calls over plan limit of 500,000",
+    description: "Api Calls over plan limit",
     currency: "usd",
   });
   await getClient().invoiceItems.create({
     customer: customerId,
     unit_amount_decimal: usage.plan.unit_amount,
     quantity: usage.plan.quantity,
-    description: "Atom plan base fee",
+    description: "Plan fee",
     currency: "usd",
   });
 

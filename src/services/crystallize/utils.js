@@ -161,6 +161,80 @@ const callProductSubscriptionsApi = createApiCaller(
 // const callPimApi = createApiCaller("https://pim.crystallize.com/graphql");
 const callPimApi = createApiCaller(CRYSTALLIZE_PIM_API_URL);
 
+const planUnitPricing = {
+  atom: {
+    orders: { unit_amount: 20 },
+    bandwidth: { unit_amount: 15 },
+    items: { unit_amount: 2 },
+    apiCalls: { unit_amount: 0.001 },
+    plan: { unit_amount: 29900 },
+  },
+  particle: {
+    orders: { max_orders: 50, per_extra_orders: 0.5 },
+    bandwidth: { max_bandwidth: 5, per_extra_bandwidth: 0.3 },
+    items: { max_items: 1000, per_extra_items: 0.05 },
+    apiCalls: {
+      max_api_calls: 25000,
+      per_extra_api_calls: 2,
+      api_calls_chunk_size: 25000,
+    },
+  },
+};
+
+const getPayableUsage = (planName, metrics) => {
+  const planLimit = planUnitPricing[planName];
+  return {
+    orders: {
+      unit_amount: planLimit.orders.per_extra_orders * 100,
+      quantity:
+        metrics.orders.count <= planLimit.orders.max_orders
+          ? 0
+          : metrics.orders.count - planLimit.orders.max_orders,
+    },
+    items: {
+      unit_amount: planLimit.items.per_extra_items * 100,
+      quantity:
+        metrics.items.count <= planLimit.items.max_items
+          ? 0
+          : metrics.items.count - planLimit.items.max_items,
+    },
+    apiCalls: {
+      unit_amount:
+        (planLimit.apiCalls.per_extra_api_calls /
+          planLimit.apiCalls.api_calls_chunk_size) *
+        100,
+      quantity:
+        metrics.apiCalls.count <= planLimit.apiCalls.max_api_calls
+          ? 0
+          : metrics.apiCalls.count - planLimit.apiCalls.max_api_calls,
+    },
+    bandwidth: {
+      unit_amount: planLimit.bandwidth.per_extra_bandwidth * 100,
+      quantity:
+        metrics.bandwidth.total <= planLimit.bandwidth.max_bandwidth
+          ? 0
+          : Math.round(
+              metrics.bandwidth.total - planLimit.bandwidth.max_bandwidth
+            ),
+    },
+    plan: { unit_amount: planName === "particle" ? 0 : 299, quantity: 1 },
+  };
+};
+
+const getNetUsageCost = (usage) => {
+  const itemsCost = usage.items.unit_amount * usage.items.quantity;
+  const apiCallsCost = usage.apiCalls.unit_amount * usage.apiCalls.quantity;
+  const bandwidthCost = usage.bandwidth.unit_amount * usage.bandwidth.quantity;
+  const ordersCost = usage.orders.unit_amount * usage.orders.quantity;
+  return (
+    itemsCost / 100 +
+    apiCallsCost / 100 +
+    bandwidthCost / 100 +
+    ordersCost / 100 +
+    usage.plan.unit_amount
+  );
+};
+
 module.exports = {
   normaliseOrderModel,
   callCatalogueApi,
@@ -169,4 +243,6 @@ module.exports = {
   callPimApi,
   getTenantId,
   callProductSubscriptionsApi,
+  getPayableUsage,
+  getNetUsageCost,
 };
