@@ -202,9 +202,10 @@ const getPayableUsage = (planName, metrics) => {
     items: {
       unit_amount: planLimit.items.per_extra_items * 100,
       quantity:
-        metrics.items.count <= planLimit.items.max_items
-          ? 0
-          : metrics.items.count - planLimit.items.max_items,
+        metrics.items.countSinceInception - planLimit.items.max_items >=
+        metrics.items.periodCount
+          ? metrics.items.periodCount
+          : 0,
     },
     apiCalls: {
       unit_amount:
@@ -219,11 +220,11 @@ const getPayableUsage = (planName, metrics) => {
     bandwidth: {
       unit_amount: planLimit.bandwidth.per_extra_bandwidth * 100,
       quantity:
-        metrics.bandwidth.total <= planLimit.bandwidth.max_bandwidth
-          ? 0
-          : Math.round(
-              metrics.bandwidth.total - planLimit.bandwidth.max_bandwidth
-            ),
+        metrics.bandwidth.totalSinceInception -
+          planLimit.bandwidth.max_bandwidth >=
+        metrics.bandwidth.periodTotal
+          ? Math.round(metrics.bandwidth.periodTotal)
+          : 0,
     },
     plan: { unit_amount: planLimit.basePrice, quantity: 1 },
   };
