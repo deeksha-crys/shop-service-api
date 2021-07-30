@@ -1,6 +1,8 @@
 import cors from "../../../lib/cors";
 import setPipelineStage from "../../../src/services/crystallize/orders/set-pipeline-stage";
 import generateInvoiceAndChargePayment from "../../../src/services/payment-providers/stripe/generate-invoice-and-charge";
+import { subscriptionRenewedPaymentMissing } from "../../../src/services/slack/subscription-renewed-payment-missing";
+import { subscriptionRenewedNoPaymentRequired } from "../../../src/services/slack/subscription-renewed-no-payment-required";
 const STRIPE_ZERO_TAX_RATE_ID = process.env.STRIPE_ZERO_TAX_RATE_ID;
 const STRIPE_NORWAY_TAX_RATE_ID = process.env.STRIPE_NORWAY_TAX_RATE_ID;
 
@@ -25,6 +27,11 @@ async function AfterOrderCreated(req, res) {
       orderId: id,
       stageName: "fail",
     });
+    await subscriptionRenewedPaymentMissing({
+      tenantId: customer.identifier,
+      orderId: id,
+      amountPending: grossPrice,
+    });
   } else if (grossPrice > 0 && stripePaymentMethodId) {
     invoice = await generateInvoiceAndChargePayment(
       stripeCustomerId,
@@ -37,9 +44,14 @@ async function AfterOrderCreated(req, res) {
       orderId: id,
       stageName: "success",
     });
+    await subscriptionRenewedNoPaymentRequired({
+      tenantId: customer.identifier,
+      orderId: id,
+      amountPending: grossPrice,
+    });
   }
   res.send({
-    message: "Order pipeline updated and payment information sent to Stripe",
+    message: "Order pipeline updated. Stripe will collect any pending payment",
     orderId: id,
     orderPipelineStageId: pipelineStageResponse,
     invoice: invoice,
