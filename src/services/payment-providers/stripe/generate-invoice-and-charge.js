@@ -1,8 +1,8 @@
 module.exports = async function generateInvoiceAndChargePayment(
   customerId,
   taxRateId,
-  usage,
-  orderId
+  orderId,
+  amountToCharge
 ) {
   const { getClient } = require("./utils");
   const paymentMethods = await getClient().paymentMethods.list({
@@ -14,39 +14,39 @@ module.exports = async function generateInvoiceAndChargePayment(
     paymentMethods?.data.length > 0 ? paymentMethods?.data[0]["id"] : null;
   const crystallizeTenantId = stripeCustomer?.metadata?.customerTenantId;
 
+  // await getClient().invoiceItems.create({
+  //   customer: customerId,
+  //   unit_amount_decimal: usage.orders.unit_amount,
+  //   quantity: usage.orders.quantity,
+  //   description: "Orders over plan limit",
+  //   currency: "usd",
+  // });
+  // await getClient().invoiceItems.create({
+  //   customer: customerId,
+  //   unit_amount_decimal: usage.items.unit_amount,
+  //   quantity: usage.items.quantity,
+  //   description: "Catalogue items over plan limit",
+  //   currency: "usd",
+  // });
+  // await getClient().invoiceItems.create({
+  //   customer: customerId,
+  //   unit_amount_decimal: usage.bandwidth.unit_amount,
+  //   quantity: usage.bandwidth.quantity,
+  //   description: "Bandwidth over plan limit",
+  //   currency: "usd",
+  // });
+  // await getClient().invoiceItems.create({
+  //   customer: customerId,
+  //   unit_amount_decimal: usage.apiCalls.unit_amount,
+  //   quantity: usage.apiCalls.quantity,
+  //   description: "Api Calls over plan limit",
+  //   currency: "usd",
+  // });
   await getClient().invoiceItems.create({
     customer: customerId,
-    unit_amount_decimal: usage.orders.unit_amount,
-    quantity: usage.orders.quantity,
-    description: "Orders over plan limit",
-    currency: "usd",
-  });
-  await getClient().invoiceItems.create({
-    customer: customerId,
-    unit_amount_decimal: usage.items.unit_amount,
-    quantity: usage.items.quantity,
-    description: "Catalogue items over plan limit",
-    currency: "usd",
-  });
-  await getClient().invoiceItems.create({
-    customer: customerId,
-    unit_amount_decimal: usage.bandwidth.unit_amount,
-    quantity: usage.bandwidth.quantity,
-    description: "Bandwidth over plan limit",
-    currency: "usd",
-  });
-  await getClient().invoiceItems.create({
-    customer: customerId,
-    unit_amount_decimal: usage.apiCalls.unit_amount,
-    quantity: usage.apiCalls.quantity,
-    description: "Api Calls over plan limit",
-    currency: "usd",
-  });
-  await getClient().invoiceItems.create({
-    customer: customerId,
-    unit_amount_decimal: usage.plan.unit_amount,
-    quantity: usage.plan.quantity,
-    description: "Plan fee",
+    unit_amount_decimal: amountToCharge * 100,
+    quantity: 1,
+    description: "Crystallize monthly subscription fee",
     currency: "usd",
   });
 
