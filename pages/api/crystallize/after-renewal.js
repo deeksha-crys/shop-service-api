@@ -136,6 +136,7 @@ async function AfterSubscriptionRenewal(req, res) {
     lastName,
     externalReferences,
     addresses,
+    email,
     meta,
   } = crystallizeCustomer;
   const stripeCustomerId = externalReferences.filter(
@@ -200,6 +201,7 @@ async function AfterSubscriptionRenewal(req, res) {
         paymentMethodId: stripePaymentMethodId ? stripePaymentMethodId : "",
       },
     },
+    meta: [{ key: "email", value: email }],
   };
   const orderResponse = await createOrder(orderPayload);
   const orderId = orderResponse.id;

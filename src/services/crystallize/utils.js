@@ -244,6 +244,28 @@ const getNetUsageCost = (usage) => {
   );
 };
 
+const paymentStatus = {
+  PAYMENT_SUCCESS: "PAYMENT_SUCCESS",
+  PAYMENT_FAILURE: "PAYMENT_FAILURE",
+  PAYMENT_METHOD_MISSING: "PAYMENT_METHOD_MISSING",
+  NO_PAYMENT_REQUIRED: "NO_PAYMENT_REQUIRED",
+};
+
+const planInfo = {
+  particle: {
+    apiCalls: "API calls(25000 included)",
+    catalogueItems: "Items(1000 included)",
+    bandwidth: "Bandwidth(5GB included)",
+    orders: "Orders(50 included)",
+  },
+  atom: {
+    apiCalls: "API calls(500,000 included)",
+    catalogueItems: "Items(1,000,000 included)",
+    bandwidth: "Bandwidth(50GB included)",
+    orders: "Orders(1000 included)",
+  },
+};
+
 module.exports = {
   normaliseOrderModel,
   callCatalogueApi,
@@ -254,4 +276,6 @@ module.exports = {
   callProductSubscriptionsApi,
   getPayableUsage,
   getNetUsageCost,
+  paymentStatus,
+  planInfo,
 };
