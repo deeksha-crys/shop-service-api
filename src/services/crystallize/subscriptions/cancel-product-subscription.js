@@ -1,11 +1,14 @@
 import { callProductSubscriptionsApi } from "../utils";
 
-module.exports = async function cancelSubscription(productSubscriptionId) {
+module.exports = async function cancelSubscription(
+  productSubscriptionId,
+  deactivate
+) {
   const response = await callProductSubscriptionsApi({
     query: `
-        mutation CANCEL_PRODUCT_SUBSCRIPTION($id: ID!) {
+        mutation CANCEL_PRODUCT_SUBSCRIPTION($id: ID!, $deactivate: Boolean) {
           productSubscriptions {
-            cancel(id: $id, deactivate: true) {
+            cancel(id: $id, deactivate: $deactivate) {
               id
               status{
                 renewAt
@@ -17,6 +20,7 @@ module.exports = async function cancelSubscription(productSubscriptionId) {
       `,
     variables: {
       id: productSubscriptionId,
+      deactivate,
     },
   });
   if (response.errors) {

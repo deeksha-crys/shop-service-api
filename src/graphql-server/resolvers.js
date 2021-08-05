@@ -97,7 +97,8 @@ module.exports = {
     create: (parent, args) => {
       return crystallize.subscriptions.create({ ...args.input });
     },
-    cancel: (parent, args) => crystallize.subscriptions.cancel(args.id),
+    cancel: (parent, args) =>
+      crystallize.subscriptions.cancel(args.id, args.deactivate),
     renew: (parent, args) => crystallize.subscriptions.renew({ ...args }),
   },
   StripeMutations: {

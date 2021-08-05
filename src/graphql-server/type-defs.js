@@ -170,7 +170,7 @@ module.exports = gql`
 
   type SubscriptionMutations {
     create(input: CreateProductSubscriptionInput!): JSON
-    cancel(id: String!): JSON
+    cancel(id: String!, deactivate: Boolean): JSON
     renew(id: String!): JSON
   }
 
