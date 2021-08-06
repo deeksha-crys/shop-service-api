@@ -3,8 +3,8 @@ const now = new Date();
 const year = now.getFullYear();
 const month = now.getMonth();
 
-export const getStartDate = () => getIsoDate(year, month, true);
-export const getEndDate = () => getIsoDate(year, month, false);
+export const getStartDate = () => getIsoDate(year, month - 1, true);
+export const getEndDate = () => getIsoDate(year, month - 1, false);
 
 export const getIsoDate = (year, month, start) => {
   const firstDay = 1;
