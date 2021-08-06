@@ -25,7 +25,11 @@ module.exports = async function getAllProductSubscriptions(customerIdentifier) {
       fragment productSubscriptionsFragment on ProductSubscription {
         customerIdentifier
         id
-        item {name, sku}
+        item { 
+          name
+          sku
+          quantity
+        }
         status { renewAt activeUntil}
         subscriptionPlan {
           name
