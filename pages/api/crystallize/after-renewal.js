@@ -78,6 +78,18 @@ async function AfterSubscriptionRenewal(req, res) {
   const grossPrice = parseFloat(
     (netPrice + (netPrice * taxPercent) / 100).toFixed(2)
   );
+  const catalogueItemsPrice = parseFloat(
+    (payableUsage.items.unit_amount * payableUsage.items.quantity) / 100
+  ).toFixed(2);
+  const ordersPrice = parseFloat(
+    (payableUsage.orders.unit_amount * payableUsage.orders.quantity) / 100
+  ).toFixed(2);
+  const apiCallsPrice = parseFloat(
+    (payableUsage.apiCalls.unit_amount * payableUsage.apiCalls.quantity) / 100
+  ).toFixed(2);
+  const bandwidthPrice = parseFloat(
+    (payableUsage.bandwidth.unit_amount * payableUsage.bandwidth.quantity) / 100
+  ).toFixed(2);
 
   const orderPayload = {
     customer: {
@@ -103,6 +115,28 @@ async function AfterSubscriptionRenewal(req, res) {
           currency: "USD",
           tax: { name: "VAT", percent: taxPercent },
         },
+        meteredVariables: [
+          {
+            meteredVariableId: "catalogue-items",
+            usage: metrics.items.periodCount,
+            price: catalogueItemsPrice,
+          },
+          {
+            meteredVariableId: "bandwidth",
+            usage: metrics.bandwidth.periodCount,
+            price: bandwidthPrice,
+          },
+          {
+            meteredVariableId: "api-calls",
+            usage: metrics.apiCalls.count,
+            price: apiCallsPrice,
+          },
+          {
+            meteredVariableId: "orders",
+            usage: metrics.orders.count,
+            price: ordersPrice,
+          },
+        ],
       },
     ],
     total: {
