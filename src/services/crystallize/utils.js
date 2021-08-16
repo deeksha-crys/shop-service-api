@@ -202,10 +202,9 @@ const getPayableUsage = (planName, metrics) => {
     items: {
       unit_amount: planLimit.items.per_extra_items * 100,
       quantity:
-        metrics.items.countSinceInception - planLimit.items.max_items >=
-        metrics.items.periodCount
-          ? metrics.items.periodCount
-          : 0,
+        metrics.items.periodCount <= planLimit.items.max_items
+          ? 0
+          : metrics.items.periodCount - planLimit.items.max_items,
     },
     apiCalls: {
       unit_amount:
