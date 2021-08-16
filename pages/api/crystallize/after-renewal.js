@@ -62,7 +62,7 @@ async function AfterSubscriptionRenewal(req, res) {
     : "crystal";
   console.log("activePlan ", activePlan);
   if (activePlan === "particle") {
-    /** if there was an Atom plan active last month to charge**/
+    /** Check if Atom plan was downgraded during this billing period**/
     downgradedAtomPlanThisMonth = allSubscriptions.filter(
       (sub) =>
         new Date(sub.node.status.activeUntil).getMonth() ===
@@ -123,7 +123,7 @@ async function AfterSubscriptionRenewal(req, res) {
   const orderResponse = await createOrder(orderPayload);
   const orderId = orderResponse.id;
 
-  /** After order is created, deactivate the plan**/
+  /** After order is created, deactivate old plan**/
   if (downgradedAtomPlanThisMonth)
     await cancelSubscription(downgradedAtomPlanThisMonth.node.id, true);
   res.send({
