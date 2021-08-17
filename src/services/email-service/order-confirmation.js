@@ -81,7 +81,7 @@ module.exports = async function sendOrderConfirmation(orderId, email, status) {
                 </tr>
                 
                 <tr>
-                  <td style="padding: 0 15px 0 0">${planLimits.orders})</td>
+                  <td style="padding: 0 15px 0 0">${planLimits.orders}</td>
                   <td style="padding: 0 15px;">28</td>
                   <td style="padding: 0 0 0 15px;">$0</td>
                 </tr>
@@ -89,13 +89,13 @@ module.exports = async function sendOrderConfirmation(orderId, email, status) {
                 <tr>
                   <td style="padding: 0 15px 0 0">${
                     planLimits.catalogueItems
-                  })</td>
+                  }</td>
                   <td style="padding: 0 15px;">400</td>
                   <td style="padding: 0 0 0 15px;">$0</td>
                 </tr>
                 
                 <tr>
-                  <td style="padding: 0 15px 0 0">${planLimits.apiCalls})</td>
+                  <td style="padding: 0 15px 0 0">${planLimits.apiCalls}</td>
                   <td style="padding: 0 15px;">15000</td>
                   <td style="padding: 0 0 0 15px;">$0</td>
                 </tr>`
