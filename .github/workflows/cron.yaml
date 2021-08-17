@@ -6,5 +6,7 @@ jobs:
   cron:
     runs-on: ubuntu-latest
     steps:
-      - name: Just echo
-        run: echo "Hello World"
+      - name: Call our service API route
+        run: |
+          curl --request POST \
+          --url 'https://shop-service-api.vercel.app/api/crystallize/run'
