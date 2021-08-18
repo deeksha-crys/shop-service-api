@@ -2,9 +2,10 @@ import cors from "../../../lib/cors";
 import { autoRenewSubscription } from "../../../src/services/crystallize/subscriptions/auto-renew";
 
 async function autoRenew(req, res) {
-  await autoRenewSubscription();
+  const activeSubscriptions = await autoRenewSubscription();
   res.send({
-    messages: "All active subscriptions have been renewed",
+    message: "Subscription renewal job started.",
+    activeSubscriptions: activeSubscriptions,
   });
 }
 
