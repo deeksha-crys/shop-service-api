@@ -1,10 +1,10 @@
 import cors from "../../../lib/cors";
-import { renewMonthlySubscription } from "../../../src/services/crystallize/subscriptions/auto-renew";
+import { autoRenewSubscription } from "../../../src/services/crystallize/subscriptions/auto-renew";
 
 async function autoRenew(req, res) {
-  const response = await renewMonthlySubscription();
+  await autoRenewSubscription();
   res.send({
-    message: response.message,
+    messages: "All active subscriptions have been renewed",
   });
 }
 
