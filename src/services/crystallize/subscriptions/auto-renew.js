@@ -9,21 +9,21 @@ const autoRenewSubscription = async () => {
     },
     query: `
       query getAllSubscriptions($tenantId: ID!){
-        productSubscriptions{
+        subscriptionContracts{
           getMany(tenantId: $tenantId){
             pageInfo {
               totalNodes
             }
             edges {
               node {
-                ...productSubscriptionsFragment
+                ...subscriptionContractFragment
               }  
             }
           }
         }
       } 
       
-      fragment productSubscriptionsFragment on ProductSubscription {
+      fragment subscriptionContractFragment on SubscriptionContract {
         customerIdentifier
         id
         status { renewAt activeUntil }
@@ -31,7 +31,7 @@ const autoRenewSubscription = async () => {
     `,
   });
 
-  const subscriptionsObj = response.data?.productSubscriptions?.getMany?.edges;
+  const subscriptionsObj = response.data?.subscriptionContracts?.getMany?.edges;
   const activeSubscriptions = subscriptionsObj.filter(
     (sub) => sub.node.status.renewAt && sub.node.status.activeUntil
   );

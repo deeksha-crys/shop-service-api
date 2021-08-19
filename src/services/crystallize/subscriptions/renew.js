@@ -4,7 +4,7 @@ module.exports = async function renewSubscription({ id }) {
   const response = await callProductSubscriptionsApi({
     query: `
         mutation RENEW_PRODUCT_SUBSCRIPTION($id: ID!) {
-          productSubscriptions {
+          subscriptionContracts {
             renew(id: $id) {
               id
               status {
@@ -22,5 +22,5 @@ module.exports = async function renewSubscription({ id }) {
   if (response.errors) {
     throw new Error(response.errors);
   }
-  return response.data.productSubscriptions.renew;
+  return response.data.subscriptionContracts.renew;
 };

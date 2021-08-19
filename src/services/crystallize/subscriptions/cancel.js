@@ -7,7 +7,7 @@ module.exports = async function cancelSubscription(
   const response = await callProductSubscriptionsApi({
     query: `
         mutation CANCEL_PRODUCT_SUBSCRIPTION($id: ID!, $deactivate: Boolean) {
-          productSubscriptions {
+          subscriptionContracts {
             cancel(id: $id, deactivate: $deactivate) {
               id
               status{
@@ -27,5 +27,5 @@ module.exports = async function cancelSubscription(
     throw new Error(response.errors);
   }
   console.log(JSON.stringify(response));
-  return response.data.productSubscriptions.cancel;
+  return response.data.subscriptionContracts.cancel;
 };
