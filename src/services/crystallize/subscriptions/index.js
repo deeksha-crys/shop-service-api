@@ -1,11 +1,11 @@
-const create = require("./create-product-subscription");
-const cancel = require("./cancel-product-subscription");
+const create = require("./create");
+const cancel = require("./cancel");
 const renew = require("./renew");
-const getAllSubscriptions = require("./get-all-product-subscriptions");
+const getAll = require("./get-all");
 
 module.exports = {
   create,
   cancel,
-  getAllSubscriptions,
+  getAll,
   renew,
 };

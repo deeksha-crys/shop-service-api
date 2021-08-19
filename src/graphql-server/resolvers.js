@@ -63,7 +63,7 @@ module.exports = {
   },
   SubscriptionQueries: {
     getAll: (parent, args) =>
-      crystallize.subscriptions.getAllSubscriptions(args.customerIdentifier),
+      crystallize.subscriptions.getAll(args.customerIdentifier),
   },
   CustomerQueries: {
     get: (parent, args) => crystallize.customers.get({ ...args }),
