@@ -2,8 +2,8 @@ import cors from "../../../lib/cors";
 import createOrder from "../../../src/services/crystallize/orders/create-order";
 import getCustomer from "../../../src/services/crystallize/customers/get-customer";
 import getMetrics from "../../../src/services/crystallize/tenants/get-metrics";
-import getAllProductSubscriptions from "../../../src/services/crystallize/subscriptions/get-all-product-subscriptions";
-import cancelSubscription from "../../../src/services/crystallize/subscriptions/cancel-product-subscription";
+import getAllProductSubscriptions from "../../../src/services/crystallize/subscriptions/get-all";
+import cancelSubscription from "../../../src/services/crystallize/subscriptions/cancel";
 import {
   getNetUsageCost,
   getPayableUsage,
@@ -120,22 +120,22 @@ async function AfterSubscriptionRenewal(req, res) {
           unit: "month",
           meteredVariables: [
             {
-              id: "items meter",
+              id: "611ebbe7fd767e0008d72025",
               usage: metrics.items.periodCount,
               price: parseFloat(catalogueItemsPrice),
             },
             {
-              id: "bandwidth meter",
+              id: "611ebbe7fd767e0008d72028",
               usage: metrics.bandwidth.periodTotal,
               price: parseFloat(bandwidthPrice),
             },
             {
-              id: "apicalls meter",
+              id: "611ebbe7fd767e0008d72027",
               usage: metrics.apiCalls.count,
               price: parseFloat(apiCallsPrice),
             },
             {
-              id: "orders meter",
+              id: "611ebbe7fd767e0008d72026",
               usage: metrics.orders.count,
               price: parseFloat(ordersPrice),
             },
