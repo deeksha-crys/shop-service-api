@@ -109,11 +109,10 @@ module.exports = async function createProductSubscription({
         renewAt: activeUntil.toISOString(),
       };
     }
-
     const response = await callProductSubscriptionsApi({
       query: `
-        mutation CREATE_PRODUCT_SUBSCRIPTION($productSubscription: CreateProductSubscriptionInput!) {
-          productSubscriptions {
+        mutation CREATE_PRODUCT_SUBSCRIPTION($productSubscription: CreateSubscriptionContractInput) {
+          subscriptionContracts {
             create(input: $productSubscription) {
               id
             }
@@ -124,12 +123,11 @@ module.exports = async function createProductSubscription({
         productSubscription,
       },
     });
-    if (response.errors) {
-      console.log(JSON.stringify(response.errors, null, 2));
-      throw new Error(response.errors);
-    }
-    return response.data.productSubscriptions.create;
+    console.log("Response from server ", response);
+    if (response.errors) console.log(JSON.stringify(response.errors, null, 2));
+    return response.data.subscriptionContracts.create;
   } catch (error) {
     console.log("Error -> ", error.message);
+    throw new Error(error);
   }
 };
