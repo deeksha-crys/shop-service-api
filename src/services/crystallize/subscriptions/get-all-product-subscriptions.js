@@ -8,45 +8,44 @@ module.exports = async function getAllProductSubscriptions(customerIdentifier) {
       customerIdentifier: customerIdentifier,
     },
     query: `
-      query getAllSubscriptions($tenantId: ID!, $customerIdentifier: String){
-        productSubscriptions{
+      query getAllSubscriptionContracts($tenantId: ID!, $customerIdentifier: String){
+        subscriptionContracts{
           getMany(tenantId: $tenantId, customerIdentifier: $customerIdentifier){
             pageInfo {
               totalNodes
             }
             edges {
               node {
-                ...productSubscriptionsFragment
+                ...subscriptionContractFragment
               }  
             }
           }
         }
       } 
-      fragment productSubscriptionsFragment on ProductSubscription {
+      fragment subscriptionContractFragment on SubscriptionContract {
         customerIdentifier
         id
         item { 
           name
           sku
-          quantity
         }
         status { renewAt activeUntil}
         subscriptionPlan {
           name
           periods {
-          id
-          initial {
-            unit
-            period
+            id
+            initial {
+              unit
+              period
+            }
+            recurring {
+              unit
+              period
+            }
           }
-          recurring {
-            unit
-            period
         }
-      }
-    }
-  }         
+      }         
     `,
   });
-  return response.data?.productSubscriptions?.getMany?.edges;
+  return response.data?.subscriptionContracts?.getMany?.edges;
 };

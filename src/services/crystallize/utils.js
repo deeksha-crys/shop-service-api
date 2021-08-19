@@ -66,6 +66,7 @@ function normaliseOrderModel({ customer, cart, total, ...rest }) {
           productId,
           productVariantId,
           quantity,
+          subscription,
           price,
         } = item;
 
@@ -75,6 +76,7 @@ function normaliseOrderModel({ customer, cart, total, ...rest }) {
           productId,
           productVariantId,
           quantity,
+          subscription,
           price,
           imageUrl: images && images[0] && images[0].url,
         };
