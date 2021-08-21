@@ -1,4 +1,11 @@
 const { paymentStatus, planInfo } = require("../crystallize/utils");
+
+const meteredVariableIdToName = {
+  items: "611ebbe7fd767e0008d72025",
+  orders: "611ebbe7fd767e0008d72026",
+  apiCalls: "611ebbe7fd767e0008d72027",
+  bandwidth: "611ebbe7fd767e0008d72028",
+};
 module.exports = async function sendOrderConfirmation(orderId, email, status) {
   let message;
   if (status === paymentStatus.PAYMENT_METHOD_MISSING)
@@ -19,6 +26,19 @@ module.exports = async function sendOrderConfirmation(orderId, email, status) {
     const { orders } = require("../crystallize");
     const { sendEmail } = require("./utils");
     const order = await orders.get(orderId);
+    const itemsMeter = order.cart[0].subscription.meteredVariables.filter(
+      (m) => m.id === meteredVariableIdToName.items
+    )[0];
+    const ordersMeter = order.cart[0].subscription.meteredVariables.filter(
+      (m) => m.id === meteredVariableIdToName.orders
+    )[0];
+    const apiCallsMeter = order.cart[0].subscription.meteredVariables.filter(
+      (m) => m.id === meteredVariableIdToName.apiCalls
+    )[0];
+    const bandwidthMeter = order.cart[0].subscription.meteredVariables.filter(
+      (m) => m.id === meteredVariableIdToName.bandwidth
+    )[0];
+
     if (!email) {
       return {
         success: false,
@@ -76,28 +96,28 @@ module.exports = async function sendOrderConfirmation(orderId, email, status) {
                 </tr>
                 <tr>
                   <td style="padding: 0 15px 0 0">${planLimits.bandwidth}</td>
-                  <td style="padding: 0 15px;">5GB</td>
-                  <td style="padding: 0 0 0 15px;">$0</td>
+                  <td style="padding: 0 15px;">${bandwidthMeter.usage}GB</td>
+                  <td style="padding: 0 0 0 15px;">$${bandwidthMeter.price}</td>
                 </tr>
                 
                 <tr>
                   <td style="padding: 0 15px 0 0">${planLimits.orders}</td>
-                  <td style="padding: 0 15px;">28</td>
-                  <td style="padding: 0 0 0 15px;">$0</td>
+                  <td style="padding: 0 15px;">${ordersMeter.usage}</td>
+                  <td style="padding: 0 0 0 15px;">$${ordersMeter.price}</td>
                 </tr>
                 
                 <tr>
                   <td style="padding: 0 15px 0 0">${
                     planLimits.catalogueItems
                   }</td>
-                  <td style="padding: 0 15px;">400</td>
-                  <td style="padding: 0 0 0 15px;">$0</td>
+                  <td style="padding: 0 15px;">${itemsMeter.usage}</td>
+                  <td style="padding: 0 0 0 15px;">$${itemsMeter.price}</td>
                 </tr>
                 
                 <tr>
                   <td style="padding: 0 15px 0 0">${planLimits.apiCalls}</td>
-                  <td style="padding: 0 15px;">15000</td>
-                  <td style="padding: 0 0 0 15px;">$0</td>
+                  <td style="padding: 0 15px;">${apiCallsMeter.usage}</td>
+                  <td style="padding: 0 0 0 15px;">$${apiCallsMeter.price}</td>
                 </tr>`
               )}
             </mj-table>

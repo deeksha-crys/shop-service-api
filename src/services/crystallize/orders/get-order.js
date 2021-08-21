@@ -41,6 +41,13 @@ module.exports = async function getOrder(id) {
               name
               quantity
               imageUrl
+              subscription {
+                meteredVariables {
+                  id
+                  usage
+                  price
+                }
+              }
               price {
                 net
                 gross
