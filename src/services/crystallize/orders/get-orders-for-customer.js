@@ -31,6 +31,13 @@ module.exports = async function getAllOrdersForCustomer(customerIdentifier) {
                   quantity
                   name
                   sku
+                  subscription {
+                    meteredVariables {
+                      id
+                      usage
+                      price
+                    }
+                  }
                 }
                 pipelines {
                   stageId            
