@@ -15,16 +15,17 @@ const constructSlackPayload = ({
   customer_name,
   total,
   tenantId,
+  tenantIdentifier,
   orderId,
 }) => {
   return {
-    text: `Subscription plan successfully renewed for ${customer_name}.`,
+    text: `Subscription contract successfully renewed for ${customer_name}.`,
     blocks: [
       {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `🎊 🎊 Payment collected for Tenant ID: ${tenantId}. The subscription is successfully renewed`,
+          text: `🎊 🎊 Payment collected for Tenant identifier: *${tenantIdentifier}*. The subscription is successfully renewed`,
         },
       },
       {
@@ -38,6 +39,10 @@ const constructSlackPayload = ({
           {
             type: "mrkdwn",
             text: `*Customer Name*\n${customer_name}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Tenant identifier*\n${tenantIdentifier}`,
           },
           {
             type: "mrkdwn",

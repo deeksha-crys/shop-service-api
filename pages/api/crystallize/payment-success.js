@@ -3,6 +3,7 @@ import setPipelineStage from "../../../src/services/crystallize/orders/set-pipel
 import { informPaymentSuccessToCrystallize } from "../../../src/services/slack/notify-customer-payment-success";
 import { sendOrderConfirmation } from "../../../src/services/email-service";
 import { paymentStatus } from "../../../src/services/crystallize/utils";
+import getTenantInfo from "../../../src/services/crystallize/tenants/get-tenant";
 
 async function InvoicePaymentSuccess(req, res) {
   const { customer, customer_email, customer_name, total, metadata } = {
@@ -10,7 +11,7 @@ async function InvoicePaymentSuccess(req, res) {
   };
   const orderId = metadata.crystallizeOrderId;
   const tenantId = metadata.customerTenantId;
-
+  const tenantInfo = await getTenantInfo(tenantId);
   const setPipelineStageResponse = await setPipelineStage({
     orderId: orderId,
     stageName: "success",
@@ -27,6 +28,7 @@ async function InvoicePaymentSuccess(req, res) {
     customer_name,
     total: total / 100,
     tenantId,
+    tenantIdentifier: tenantInfo.identifier,
     orderId,
   });
   const emailResponse = await sendOrderConfirmation(
