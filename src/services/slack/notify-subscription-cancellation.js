@@ -13,18 +13,19 @@ const constructSlackPayload = ({
   planName,
   customerIdentifier,
   productSubscriptionId,
+  tenantIdentifier,
   firstName,
   lastName,
   email,
 }) => {
   return {
-    text: `Subscription plan cancelled. `,
+    text: `Subscription contract cancelled. `,
     blocks: [
       {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `❌ ${planName} subscription plan cancelled. Customer and subscription details below 👇`,
+          text: `❌ ${planName} subscription cancelled. Customer and subscription details below 👇`,
         },
       },
       {
@@ -34,6 +35,10 @@ const constructSlackPayload = ({
           {
             type: "mrkdwn",
             text: `*Crystallize Customer ID *\n${customerIdentifier}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Tenant identifier *\n${tenantIdentifier}`,
           },
           {
             type: "mrkdwn",
@@ -49,7 +54,7 @@ const constructSlackPayload = ({
           },
           {
             type: "mrkdwn",
-            text: `*Cancelled Product Subscription ID *\n${productSubscriptionId}`,
+            text: `*Cancelled SubscriptionContract ID *\n${productSubscriptionId}`,
           },
         ],
       },
