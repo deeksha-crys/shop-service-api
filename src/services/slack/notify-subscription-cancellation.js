@@ -13,6 +13,9 @@ const constructSlackPayload = ({
   planName,
   customerIdentifier,
   productSubscriptionId,
+  firstName,
+  lastName,
+  email,
 }) => {
   return {
     text: `Subscription plan cancelled. `,
@@ -31,6 +34,14 @@ const constructSlackPayload = ({
           {
             type: "mrkdwn",
             text: `*Crystallize Customer ID *\n${customerIdentifier}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Customer Name *\n${firstName} ${lastName}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Customer email *\n${email}`,
           },
           {
             type: "mrkdwn",

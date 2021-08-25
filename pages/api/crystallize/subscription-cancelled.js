@@ -1,8 +1,13 @@
 import cors from "../../../lib/cors";
 import { informSubscriptionCancellation } from "../../../src/services/slack/notify-subscription-cancellation";
+import getCustomer from "../../../src/services/crystallize/customers/get-customer";
 
 async function subscriptionCancelled(req, res) {
   const { customerIdentifier, item, id } = req.body.productSubscription.get;
+  const crystallizeCustomer = await getCustomer({
+    identifier: customerIdentifier,
+  });
+  const { firstName, lastName, email } = crystallizeCustomer;
   const planName = item.name.includes("particle")
     ? "Particle"
     : item.name.includes("atom")
@@ -13,6 +18,9 @@ async function subscriptionCancelled(req, res) {
     planName,
     customerIdentifier,
     productSubscriptionId: id,
+    firstName,
+    lastName,
+    email,
   });
   if (response.status === 200)
     res.send({
