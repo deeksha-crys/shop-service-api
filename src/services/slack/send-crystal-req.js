@@ -1,6 +1,7 @@
 const fetch = require("node-fetch");
 
-const SLACK_INCOMING_WEBHOOK_URL = process.env.SLACK_INCOMING_WEBHOOK_URL;
+const SLACK_INCOMING_WEBHOOK_URL =
+  process.env.CONTACT_SLACK_INCOMING_WEBHOOK_URL;
 const postToSlack = async (props) => {
   return fetch(SLACK_INCOMING_WEBHOOK_URL, {
     method: "POST",
