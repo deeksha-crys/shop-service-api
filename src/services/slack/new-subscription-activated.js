@@ -13,9 +13,13 @@ const constructSlackPayload = ({
   planName,
   productSubscriptionId,
   customerIdentifier,
+  tenantIdentifier,
+  firstName,
+  lastName,
+  email,
 }) => {
   return {
-    text: `New product subscription  `,
+    text: `New subscription contract `,
     blocks: [
       {
         type: "section",
@@ -35,6 +39,18 @@ const constructSlackPayload = ({
           {
             type: "mrkdwn",
             text: `* Crystallize Customer ID*\n${customerIdentifier}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Tenant identifier *\n${tenantIdentifier}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Customer Name *\n${firstName} ${lastName}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Customer email *\n${email}`,
           },
           {
             type: "mrkdwn",
