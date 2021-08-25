@@ -9,15 +9,23 @@ const subscriptionRenewedPaymentMissing = async (props) => {
   });
 };
 
-const constructSlackPayload = ({ tenantId, orderId, amountPending }) => {
+const constructSlackPayload = ({
+  tenantId,
+  orderId,
+  amountPending,
+  tenantIdentifier,
+  firstName,
+  lastName,
+  email,
+}) => {
   return {
-    text: `Subscription plan renewed.`,
+    text: `Subscription contract renewed.`,
     blocks: [
       {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `ℹ️ Subscription plan is renewed but payment method missing for Crystallize tenant ${tenantId}. Order details below 👇`,
+          text: `ℹ️ Payment method is missing for Crystallize tenant identifier *${tenantIdentifier}* but subscription contract is renewed. Customer and order details below 👇`,
         },
       },
       {
@@ -27,6 +35,18 @@ const constructSlackPayload = ({ tenantId, orderId, amountPending }) => {
           {
             type: "mrkdwn",
             text: `*Crystallize Tenant ID *\n${tenantId}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Tenant identifier *\n${tenantIdentifier}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Customer name *\n${firstName} ${lastName}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Customer email *\n${email}`,
           },
           {
             type: "mrkdwn",

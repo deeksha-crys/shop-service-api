@@ -4,12 +4,14 @@ import generateInvoiceAndChargePayment from "../../../src/services/payment-provi
 import { subscriptionRenewedPaymentMissing } from "../../../src/services/slack/subscription-renewed-payment-missing";
 import { subscriptionRenewedNoPaymentRequired } from "../../../src/services/slack/subscription-renewed-no-payment-required";
 import { sendOrderConfirmation } from "../../../src/services/email-service";
+import getTenantInfo from "../../../src/services/crystallize/tenants/get-tenant";
 import { paymentStatus } from "../../../src/services/crystallize/utils";
 const STRIPE_ZERO_TAX_RATE_ID = process.env.STRIPE_ZERO_TAX_RATE_ID;
 const STRIPE_NORWAY_TAX_RATE_ID = process.env.STRIPE_NORWAY_TAX_RATE_ID;
 
 async function AfterOrderCreated(req, res) {
   const { customer, total, payment, id, meta } = req.body.order.get;
+  const tenantInfo = await getTenantInfo(customer.identifier);
   const grossPrice = total.gross;
   const stripePaymentMethodId = payment[0].paymentMethodId;
   const stripeCustomerId = payment[0].customerId;
@@ -33,6 +35,10 @@ async function AfterOrderCreated(req, res) {
       tenantId: customer.identifier,
       orderId: id,
       amountPending: grossPrice,
+      email,
+      firstName: customer.firstName,
+      lastName: customer.lastName,
+      tenantIdentifier: tenantInfo.identifier,
     });
     await sendOrderConfirmation(
       id,
