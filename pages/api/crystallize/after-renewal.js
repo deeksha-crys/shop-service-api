@@ -10,7 +10,7 @@ import {
 } from "../../../src/services/crystallize/utils";
 
 async function AfterSubscriptionRenewal(req, res) {
-  const { customerIdentifier, item } = req.body.productSubscription.get;
+  const { customerIdentifier, item, id } = req.body.productSubscription.get;
   const crystallizeCustomer = await getCustomer({
     identifier: customerIdentifier,
   });
@@ -51,7 +51,8 @@ async function AfterSubscriptionRenewal(req, res) {
     crystallizeCustomer,
     item,
     metrics,
-    payableUsage
+    payableUsage,
+    id
   );
   const orderResponse = await createOrder(orderPayload);
   const orderId = orderResponse.id;

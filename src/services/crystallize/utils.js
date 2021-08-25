@@ -69,6 +69,7 @@ function normaliseOrderModel({ customer, cart, total, ...rest }) {
           productVariantId,
           quantity,
           subscription,
+          subscriptionContractId,
           price,
         } = item;
 
@@ -79,6 +80,7 @@ function normaliseOrderModel({ customer, cart, total, ...rest }) {
           productVariantId,
           quantity,
           subscription,
+          subscriptionContractId,
           price,
           imageUrl: images && images[0] && images[0].url,
         };
@@ -274,7 +276,8 @@ const constructOrderPayload = (
   crystallizeCustomer,
   item,
   metrics,
-  payableUsage
+  payableUsage,
+  subscriptionContractId
 ) => {
   const {
     identifier,
@@ -329,6 +332,7 @@ const constructOrderPayload = (
     cart: [
       {
         quantity: 1,
+        subscriptionContractId: subscriptionContractId,
         name: downgradedAtomPlanThisMonth
           ? downgradedAtomPlanThisMonth.node.item.name
           : item.name,
