@@ -3,6 +3,7 @@ import { informPaymentFailedToCrystallize } from "../../../src/services/slack/se
 import setPipelineStage from "../../../src/services/crystallize/orders/set-pipeline-stage";
 import { sendOrderConfirmation } from "../../../src/services/email-service";
 import { paymentStatus } from "../../../src/services/crystallize/utils";
+import getTenantInfo from "../../../src/services/crystallize/tenants/get-tenant";
 
 async function InvoicePaymentFailed(req, res) {
   const { customer, customer_email, customer_name, total, metadata } = {
@@ -10,6 +11,7 @@ async function InvoicePaymentFailed(req, res) {
   };
   const orderId = metadata.crystallizeOrderId;
   const tenantId = metadata.customerTenantId;
+  const tenantInfo = await getTenantInfo(tenantId);
   const setPipelineStageResponse = await setPipelineStage({
     orderId: orderId,
     stageName: "fail",
@@ -25,6 +27,8 @@ async function InvoicePaymentFailed(req, res) {
     customer_name,
     total: total / 100,
     tenantId,
+    tenantIdentifier: tenantInfo.identifier,
+    orderId,
   });
 
   const emailResponse = await sendOrderConfirmation(

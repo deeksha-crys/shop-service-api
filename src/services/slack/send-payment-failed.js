@@ -15,6 +15,8 @@ const constructSlackPayload = ({
   customer_name,
   total,
   tenantId,
+  tenantIdentifier,
+  orderId,
 }) => {
   return {
     text: `Stripe failed to collect monthly subscription payment for ${customer_name}.`,
@@ -23,7 +25,7 @@ const constructSlackPayload = ({
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `:warning: Stripe failed to collect monthly subscription payment for ${customer_name}.`,
+          text: `:warning: Stripe failed to collect monthly subscription payment for tenant identifier: *${tenantIdentifier}*.`,
         },
       },
       {
@@ -40,7 +42,15 @@ const constructSlackPayload = ({
           },
           {
             type: "mrkdwn",
+            text: `*Tenant identifier*\n${tenantIdentifier}`,
+          },
+          {
+            type: "mrkdwn",
             text: `*Total balance due*\n${total}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Crystallize Order ID*\n${orderId}`,
           },
           {
             type: "mrkdwn",
