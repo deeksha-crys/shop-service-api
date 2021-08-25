@@ -61,6 +61,10 @@ async function AfterOrderCreated(req, res) {
       tenantId: customer.identifier,
       orderId: id,
       amountPending: grossPrice,
+      email,
+      firstName: customer.firstName,
+      lastName: customer.lastName,
+      tenantIdentifier: tenantInfo.identifier,
     });
     await sendOrderConfirmation(id, email, paymentStatus.NO_PAYMENT_REQUIRED);
   }

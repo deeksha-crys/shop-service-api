@@ -9,15 +9,23 @@ const subscriptionRenewedNoPaymentRequired = async (props) => {
   });
 };
 
-const constructSlackPayload = ({ tenantId, orderId, amountPending }) => {
+const constructSlackPayload = ({
+  tenantId,
+  orderId,
+  amountPending,
+  tenantIdentifier,
+  firstName,
+  lastName,
+  email,
+}) => {
   return {
-    text: `Subscription plan renewed.`,
+    text: `Subscription contract renewed.`,
     blocks: [
       {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `🙌 Subscription plan is renewed. No payment required for Crystallize tenant ${tenantId}.`,
+          text: `🙌 Subscription contract is renewed. No payment required for Crystallize tenant identifier *${tenantIdentifier}*.`,
         },
       },
       {
@@ -27,6 +35,18 @@ const constructSlackPayload = ({ tenantId, orderId, amountPending }) => {
           {
             type: "mrkdwn",
             text: `*Crystallize Tenant ID *\n${tenantId}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Tenant identifier *\n${tenantIdentifier}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Customer name *\n${firstName} ${lastName}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Customer email *\n${email}`,
           },
           {
             type: "mrkdwn",
