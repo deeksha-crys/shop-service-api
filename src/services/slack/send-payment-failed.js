@@ -46,7 +46,7 @@ const constructSlackPayload = ({
           },
           {
             type: "mrkdwn",
-            text: `*Total balance due*\n${total}`,
+            text: `*Total balance due*\n$${total}`,
           },
           {
             type: "mrkdwn",
