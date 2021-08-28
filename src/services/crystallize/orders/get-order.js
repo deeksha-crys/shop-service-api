@@ -10,6 +10,7 @@ module.exports = async function getOrder(id) {
         orders {
           get(id: $id) {
             id
+            createdAt
             total {
               net
               gross
@@ -52,6 +53,7 @@ module.exports = async function getOrder(id) {
                 net
                 gross
                 currency
+                tax{name percent}
               }
               meta {
                 key
@@ -59,6 +61,7 @@ module.exports = async function getOrder(id) {
               }
             }
             customer {
+              identifier
               firstName
               lastName
               addresses {

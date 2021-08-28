@@ -256,21 +256,6 @@ const paymentStatus = {
   NO_PAYMENT_REQUIRED: "NO_PAYMENT_REQUIRED",
 };
 
-const planInfo = {
-  particle: {
-    apiCalls: "API calls(25000 included)",
-    catalogueItems: "Items(1000 included)",
-    bandwidth: "Bandwidth(5GB included)",
-    orders: "Orders(50 included)",
-  },
-  atom: {
-    apiCalls: "API calls(500,000 included)",
-    catalogueItems: "Items(1,000,000 included)",
-    bandwidth: "Bandwidth(50GB included)",
-    orders: "Orders(1000 included)",
-  },
-};
-
 const constructOrderPayload = (
   downgradedAtomPlanThisMonth,
   crystallizeCustomer,
@@ -402,5 +387,5 @@ module.exports = {
   getNetUsageCost,
   constructOrderPayload,
   paymentStatus,
-  planInfo,
+  planPricing,
 };
