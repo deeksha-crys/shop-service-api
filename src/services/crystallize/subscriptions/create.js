@@ -35,6 +35,12 @@ async function getProduct(path) {
       fragment period on ProductVariantSubscriptionPlanPricing {
         unit
         period
+        price
+        meteredVariables {
+          id
+          tierType
+          tiers { price threshold }
+        }
         priceVariants {
           identifier
           name
@@ -62,27 +68,16 @@ const getPriceForIdentifier = (priceVariantIdentifier) => (priceVariants) => {
   };
 };
 
-//TODO: These meteredVariables should be derived by querying the /catalogue API on Product.
-//      But catalogue API currently does not have the meteredVariables.
-const meterTiers = {
-  atom: {
-    "catalogue-items": { threshold: 1000000, price: 0.0, currency: "USD" },
-    orders: { threshold: 1000, price: 0.0, currency: "USD" },
-    bandwidth: { threshold: 50, price: 0.0, currency: "USD" },
-    "api-calls": { threshold: 500000, price: 0.0, currency: "USD" },
-  },
-  particle: {
-    "catalogue-items": { threshold: 1000, price: 0.0, currency: "USD" },
-    orders: { threshold: 50, price: 0.0, currency: "USD" },
-    bandwidth: { threshold: 5, price: 0.0, currency: "USD" },
-    "api-calls": { threshold: 25000, price: 0.0, currency: "USD" },
-  },
+const getMeteredVariableTier = (productMeteredVariables, id) => {
+  return productMeteredVariables.filter((m) => m.id === id)[0].tiers[0];
 };
 
-const constructMetersForContract = (meters, planName) => {
-  const planMeters = meterTiers[planName];
-  return meters.reduce((newArr, curr) => {
-    const tier = planMeters[curr.identifier];
+const constructMetersForContract = (subPlanMeters, planName, productMeters) => {
+  return subPlanMeters.reduce((newArr, curr) => {
+    const tier = {
+      currency: "USD",
+      ...getMeteredVariableTier(productMeters, curr.id),
+    };
     newArr.push({
       id: curr.id,
       tierType: "graduated",
@@ -105,10 +100,6 @@ module.exports = async function createProductSubscription({
     periodId: subscriptionPlanPeriodId,
   };
   const planName = item.name.includes("particle") ? "particle" : "atom";
-  const meteredVariables = constructMetersForContract(
-    plan.meteredVariables,
-    planName
-  );
   try {
     const tenantId = await getTenantId();
     const product = await getProduct(itemPath);
@@ -121,11 +112,20 @@ module.exports = async function createProductSubscription({
         `Cannot find plan period with id "${subscriptionPlanPeriodId}" for ${item.sku}`
       );
     }
+    const productMeteredVariables =
+      product.variants[0].subscriptionPlans[0].periods[0].initial
+        .meteredVariables;
+    const subContractMeteredVariables = constructMetersForContract(
+      plan.meteredVariables,
+      planName,
+      productMeteredVariables
+    );
+    console.log("subContractMeteredVariables -> ", subContractMeteredVariables);
     const getPrice = getPriceForIdentifier(priceVariantIdentifier);
     const initial = getPrice(planPeriod.initial.priceVariants);
-    initial.meteredVariables = meteredVariables;
+    initial.meteredVariables = subContractMeteredVariables;
     const recurring = getPrice(planPeriod.recurring.priceVariants);
-    recurring.meteredVariables = meteredVariables;
+    recurring.meteredVariables = subContractMeteredVariables;
 
     const subscriptionContract = {
       tenantId,
