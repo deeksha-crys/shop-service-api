@@ -64,7 +64,7 @@ const getPriceForIdentifier = (priceVariantIdentifier) => (priceVariants) => {
 
 //TODO: These meteredVariables should be derived by querying the /catalogue API on Product.
 //      But catalogue API currently does not have the meteredVariables.
-const atomMeterTiers = {
+const meterTiers = {
   atom: {
     "catalogue-items": { threshold: 1000000, price: 0.0, currency: "USD" },
     orders: { threshold: 1000, price: 0.0, currency: "USD" },
@@ -80,7 +80,7 @@ const atomMeterTiers = {
 };
 
 const constructMetersForContract = (meters, planName) => {
-  const planMeters = atomMeterTiers[planName];
+  const planMeters = meterTiers[planName];
   return meters.reduce((newArr, curr) => {
     const tier = planMeters[curr.identifier];
     newArr.push({
@@ -105,7 +105,12 @@ module.exports = async function createProductSubscription({
     identifier: plan.identifier,
     periodId: subscriptionPlanPeriodId,
   };
-  const meteredVariables = constructMetersForContract(plan.meteredVariables);
+  const planName = item.name.includes("particle") ? "particle" : "atom";
+  const meteredVariables = constructMetersForContract(
+    plan.meteredVariables,
+    planName
+  );
+  console.log("meteredVariables ", JSON.stringify(meteredVariables));
   try {
     const tenantId = await getTenantId();
     const product = await getProduct(itemPath);
@@ -124,7 +129,7 @@ module.exports = async function createProductSubscription({
     const recurring = getPrice(planPeriod.recurring.priceVariants);
     recurring.meteredVariables = meteredVariables;
 
-    const productSubscription = {
+    const subscriptionContract = {
       tenantId,
       subscriptionPlan: subscriptionPlanReference,
       customerIdentifier,
@@ -139,7 +144,7 @@ module.exports = async function createProductSubscription({
       const activeUntil = new Date();
       activeUntil.setMonth(date.getMonth() + 1, 1);
 
-      productSubscription.status = {
+      subscriptionContract.status = {
         price: initial.price,
         currency: initial.currency,
         activeUntil: activeUntil.toISOString(),
@@ -157,10 +162,9 @@ module.exports = async function createProductSubscription({
         }
       `,
       variables: {
-        productSubscription,
+        subscriptionContract,
       },
     });
-    console.log("Response from server ", response);
     if (response.errors) console.log(JSON.stringify(response.errors, null, 2));
     return response.data.subscriptionContracts.create;
   } catch (error) {
