@@ -120,7 +120,6 @@ module.exports = async function createProductSubscription({
       planName,
       productMeteredVariables
     );
-    console.log("subContractMeteredVariables -> ", subContractMeteredVariables);
     const getPrice = getPriceForIdentifier(priceVariantIdentifier);
     const initial = getPrice(planPeriod.initial.priceVariants);
     initial.meteredVariables = subContractMeteredVariables;
