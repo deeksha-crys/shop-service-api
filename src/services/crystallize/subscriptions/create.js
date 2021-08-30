@@ -95,7 +95,6 @@ const constructMetersForContract = (meters, planName) => {
 module.exports = async function createProductSubscription({
   item,
   itemPath,
-  subscriptionPlan,
   customerIdentifier,
   priceVariantIdentifier,
 }) {
@@ -110,7 +109,6 @@ module.exports = async function createProductSubscription({
     plan.meteredVariables,
     planName
   );
-  console.log("meteredVariables ", JSON.stringify(meteredVariables));
   try {
     const tenantId = await getTenantId();
     const product = await getProduct(itemPath);
