@@ -3,6 +3,7 @@ import {
   callCatalogueApi,
   getTenantId,
 } from "../utils";
+import getSubscriptionPlan from "./get-subscription-plan";
 
 async function getProduct(path) {
   const r = await callCatalogueApi({
@@ -61,39 +62,78 @@ const getPriceForIdentifier = (priceVariantIdentifier) => (priceVariants) => {
   };
 };
 
+//TODO: These meteredVariables should be derived by querying the /catalogue API on Product.
+//      But catalogue API currently does not have the meteredVariables.
+const meterTiers = {
+  atom: {
+    "catalogue-items": { threshold: 1000000, price: 0.0, currency: "USD" },
+    orders: { threshold: 1000, price: 0.0, currency: "USD" },
+    bandwidth: { threshold: 50, price: 0.0, currency: "USD" },
+    "api-calls": { threshold: 500000, price: 0.0, currency: "USD" },
+  },
+  particle: {
+    "catalogue-items": { threshold: 1000, price: 0.0, currency: "USD" },
+    orders: { threshold: 50, price: 0.0, currency: "USD" },
+    bandwidth: { threshold: 5, price: 0.0, currency: "USD" },
+    "api-calls": { threshold: 25000, price: 0.0, currency: "USD" },
+  },
+};
+
+const constructMetersForContract = (meters, planName) => {
+  const planMeters = meterTiers[planName];
+  return meters.reduce((newArr, curr) => {
+    const tier = planMeters[curr.identifier];
+    newArr.push({
+      id: curr.id,
+      tierType: "graduated",
+      tiers: [tier],
+    });
+    return newArr;
+  }, []);
+};
+
 module.exports = async function createProductSubscription({
   item,
   itemPath,
-  subscriptionPlan,
   customerIdentifier,
   priceVariantIdentifier,
 }) {
+  const plan = await getSubscriptionPlan();
+  const subscriptionPlanPeriodId = plan.periods[0].id;
+  const subscriptionPlanReference = {
+    identifier: plan.identifier,
+    periodId: subscriptionPlanPeriodId,
+  };
+  const planName = item.name.includes("particle") ? "particle" : "atom";
+  const meteredVariables = constructMetersForContract(
+    plan.meteredVariables,
+    planName
+  );
   try {
     const tenantId = await getTenantId();
     const product = await getProduct(itemPath);
     const planPeriod = product.variants
       .find((v) => v.sku === item.sku)
-      ?.subscriptionPlans.find(
-        (p) => p.identifier === subscriptionPlan.identifier
-      )
-      ?.periods.find((p) => p.id === subscriptionPlan.periodId);
+      ?.subscriptionPlans.find((p) => p.identifier === plan.identifier)
+      ?.periods.find((p) => p.id === subscriptionPlanPeriodId);
     if (!planPeriod) {
       throw new Error(
-        `Cannot find plan period with id "${subscriptionPlan.periodId}" for ${item.sku}`
+        `Cannot find plan period with id "${subscriptionPlanPeriodId}" for ${item.sku}`
       );
     }
-
     const getPrice = getPriceForIdentifier(priceVariantIdentifier);
-
     const initial = getPrice(planPeriod.initial.priceVariants);
+    initial.meteredVariables = meteredVariables;
+    const recurring = getPrice(planPeriod.recurring.priceVariants);
+    recurring.meteredVariables = meteredVariables;
 
-    const productSubscription = {
+    const subscriptionContract = {
       tenantId,
-      subscriptionPlan,
+      subscriptionPlan: subscriptionPlanReference,
       customerIdentifier,
       item,
       initial,
-      recurring: getPrice(planPeriod.recurring.priceVariants),
+      recurring,
     };
 
     // Define the current status of the subscription
@@ -102,7 +142,7 @@ module.exports = async function createProductSubscription({
       const activeUntil = new Date();
       activeUntil.setMonth(date.getMonth() + 1, 1);
 
-      productSubscription.status = {
+      subscriptionContract.status = {
         price: initial.price,
         currency: initial.currency,
         activeUntil: activeUntil.toISOString(),
@@ -111,19 +151,18 @@ module.exports = async function createProductSubscription({
     }
     const response = await callProductSubscriptionsApi({
       query: `
-        mutation CREATE_PRODUCT_SUBSCRIPTION($productSubscription: CreateSubscriptionContractInput) {
+        mutation CREATE_SUBSCRIPTION_CONTRACT($subscriptionContract: CreateSubscriptionContractInput) {
           subscriptionContracts {
-            create(input: $productSubscription) {
+            create(input: $subscriptionContract) {
               id
             }
           }
         }
       `,
       variables: {
-        productSubscription,
+        subscriptionContract,
       },
     });
-    console.log("Response from server ", response);
     if (response.errors) console.log(JSON.stringify(response.errors, null, 2));
     return response.data.subscriptionContracts.create;
   } catch (error) {

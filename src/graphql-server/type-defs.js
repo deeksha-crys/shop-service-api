@@ -177,7 +177,6 @@ module.exports = gql`
   input CreateSubscriptionContractInput {
     item: ProductSubscriptionItem!
     itemPath: String!
-    subscriptionPlan: ProductSubscription!
     customerIdentifier: String!
     priceVariantIdentifier: String!
   }
@@ -185,11 +184,6 @@ module.exports = gql`
   input ProductSubscriptionItem {
     name: String!
     sku: String!
-  }
-
-  input ProductSubscription {
-    periodId: String!
-    identifier: String!
   }
 
   input BasketModelInput {
